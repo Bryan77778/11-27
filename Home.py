@@ -10,7 +10,7 @@ A Streamlit map template
 """
 
 st.sidebar.title("About")
-st.sidebar.info(markdown)
+st.sidebar.info(markdown) #sidebar的info
 logo = "https://i.imgur.com/UbOXYAU.png"
 st.sidebar.image(logo)
 
