@@ -26,7 +26,7 @@ with st.expander("See source code"):
         m.add_geojson(fishing_spots_url, layer_name="Fishing Spots")
         
         m.split_map(
-            left_layer="Water Quality Stations",
-            right_layer="Fishing Spots"
+            left_layer=water_quality_stations_url,
+            right_layer=fishing_spots_url
         )
 m.to_streamlit(height=700)
