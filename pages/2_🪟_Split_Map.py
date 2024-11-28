@@ -22,8 +22,8 @@ with st.expander("See source code"):
 
         m = leafmap.Map(center=[23.5, 121], zoom=7)  
 
-        m.add_geojson(water_quality_stations_url, layer_name="Water Quality Stations")
-        m.add_geojson(fishing_spots_url, layer_name="Fishing Spots")
+        m.add_geojson(water_quality_stations_url)
+        m.add_geojson(fishing_spots_url)
         
         m.split_map(
             left_layer=water_quality_stations_url,
