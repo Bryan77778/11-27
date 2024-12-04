@@ -32,13 +32,13 @@ with col1:
     m.add_geojson(
         water_quality_stations_url,
         layer_name="Water Quality Stations",
-        style={"color": "blue", "weight": 2, "fillColor": "blue", "fillOpacity": 0.5},
+        style={"color": "blue", "weight": 2, "fillColor": "blue", "fillOpacity": 0.6},
     )
 
     m.add_geojson(
         fishing_spots_url,
         layer_name="Fishing Spots",
-        style={"color": "red", "weight": 2, "fillColor": "red", "fillOpacity": 0.5},
+        style={"color": "red", "weight": 2, "fillColor": "red", "fillOpacity": 0.6},
     )
 
     m.to_streamlit(height=700)
