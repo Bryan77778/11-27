@@ -36,8 +36,8 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.write("### 左側地圖：水質測站")
-    left_map.to_streamlit(height=600)
+    left_map.to_streamlit(height=500)
 
 with col2:
     st.write("### 右側地圖：釣魚點")
-    right_map.to_streamlit(height=600)
+    right_map.to_streamlit(height=500)
