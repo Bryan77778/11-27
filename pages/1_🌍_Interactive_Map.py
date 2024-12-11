@@ -34,13 +34,13 @@ with col1:
     m.add_geojson(
         water_quality_stations_url,
         layer_name="Water Quality Stations",
-        icon=water_icon_url
+        icon_url = water_icon_url
       )
 
     m.add_geojson(
         fishing_spots_url,
         layer_name="Fishing Spots",
-        icon=fish_icon_url
+        icon_url = fish_icon_url
       )
 
     m.to_streamlit(height=700)
