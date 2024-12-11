@@ -24,10 +24,12 @@ with st.expander("See source code"):
         left_map.add_geojson(
             water_quality_stations_url,
             layer_name="Water Quality Stations",
-
+            (
+            
         right_map = leafmap.Map(center=[23.5, 121], zoom=7)
             left_map.add_geojson(
             fishing_spots_url,
             layer_name="Fishing Spots",
-
+            (
+                
 m.to_streamlit(height=700)
