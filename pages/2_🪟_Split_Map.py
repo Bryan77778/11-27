@@ -21,31 +21,11 @@ with st.expander("See source code"):
         fishing_spots_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E5%85%A8%E5%8F%B0%E9%96%8B%E6%94%BE%E9%87%A3%E9%BB%9E%E4%BD%8D%E7%BD%AE%20(1).geojson"
 
         m = leafmap.Map(center=[23.5, 121], zoom=7)  
+        
         m.split_map(
-            left_layer="CartoDB.Positron",
-            right_layer="CartoDB.Positron"
+            left_layer="全台開放釣點位置 (1).geojson",
+            right_layer="海域水質測站.geojson"
         )
 
-        m.add_geojson(
-             water_quality_stations_url,
-             layer_name="Water Quality Stations",
-             style_function=lambda feature: {
-                 "color": "blue",
-                 "weight": 2,
-                 "fillColor": "blue",
-                 "fillOpacity": 0.6,
-             },
-        )
-
-        m.add_geojson(
-            fishing_spots_url,
-            layer_name="Fishing Spots",
-            style_function=lambda feature: {
-                "color": "red",
-                "weight": 2,
-                "fillColor": "red",
-                "fillOpacity": 0.6,
-              },
-         )
-
+    
 m.to_streamlit(height=700)
