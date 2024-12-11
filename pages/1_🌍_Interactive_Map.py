@@ -33,25 +33,21 @@ with col1:
     fishing_spots_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E5%85%A8%E5%8F%B0%E9%96%8B%E6%94%BE%E9%87%A3%E9%BB%9E%E4%BD%8D%E7%BD%AE%20(1).geojson"
     fish_icon_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/fish-solid.svg"
     water_icon_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/droplet-solid.svg"
-    
-    m.add_geojson(
-        water_quality_stations_url,
-        layer_name="Water Quality Stations",
-      )
 
-    for feature in m.get_geojson_features(water_quality_stations_url):
-        lat, lon = feature['geometry']['coordinates']
+    # 使用 geopandas 加載 GeoJSON
+    water_quality_stations = gpd.read_file(water_quality_stations_url)
+    fishing_spots = gpd.read_file(fishing_spots_url)
+
+    # 添加水質監測站標記並設置自定義圖標
+    for _, feature in water_quality_stations.iterrows():
+        lat, lon = feature.geometry.y, feature.geometry.x
         icon = CustomIcon(icon_url=water_icon_url, icon_size=(30, 30))
         folium.Marker([lat, lon], icon=icon).add_to(m)
-    
-    m.add_geojson(
-        fishing_spots_url,
-        layer_name="Fishing Spots",
-      )
 
-    for feature in m.get_geojson_features(fishing_spots_url):
-        lat, lon = feature['geometry']['coordinates']
+    # 添加釣魚點標記並設置自定義圖標
+    for _, feature in fishing_spots.iterrows():
+        lat, lon = feature.geometry.y, feature.geometry.x
         icon = CustomIcon(icon_url=fish_icon_url, icon_size=(30, 30))
         folium.Marker([lat, lon], icon=icon).add_to(m)
-    
+
     m.to_streamlit(height=700)
