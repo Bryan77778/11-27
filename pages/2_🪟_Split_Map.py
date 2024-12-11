@@ -27,7 +27,7 @@ with st.expander("See source code"):
         )
             
         right_map = leafmap.Map(center=[23.5, 121], zoom=7)
-        left_map.add_geojson(
+        right_map.add_geojson(
             fishing_spots_url,
             layer_name="Fishing Spots",
         )
