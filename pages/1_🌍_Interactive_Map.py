@@ -46,7 +46,7 @@ with col1:
         layer_name="Fishing Spots",
       )
 
-    for feature in m.get_geojson_features(water_quality_stations_url):
+    for feature in m.get_geojson_features(fishing_spots_url):
         lat, lon = feature['geometry']['coordinates']
         icon = CustomIcon(icon_url=fish_icon_url, icon_size=(30, 30))
         folium.Marker([lat, lon], icon=icon).add_to(m)
