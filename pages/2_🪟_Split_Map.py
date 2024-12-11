@@ -21,12 +21,8 @@ with st.expander("See source code"):
         fishing_spots_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E5%85%A8%E5%8F%B0%E9%96%8B%E6%94%BE%E9%87%A3%E9%BB%9E%E4%BD%8D%E7%BD%AE%20(1).geojson"
 
         m = leafmap.Map(center=[23.5, 121], zoom=7)  
-
-        m.add_geojson(water_quality_stations_url)
-        m.add_geojson(fishing_spots_url)
-        
         m.split_map(
-            left_layer=water_quality_stations_url,
-            right_layer=fishing_spots_url
+            left_layer=m.add_geojson(water_quality_stations_url),
+            right_layer=m.add_geojson(fishing_spots_url)
         )
 m.to_streamlit(height=700)
