@@ -32,4 +32,10 @@ with st.expander("See source code"):
             layer_name="Fishing Spots",
         )
                 
-m.to_streamlit(height=700)
+        with col1:
+            st.write("### 左側地圖：水質測站")
+            left_map.to_streamlit(height=700)
+
+        with col2:
+            st.write("### 右側地圖：釣魚點")
+            right_map.to_streamlit(height=700)
