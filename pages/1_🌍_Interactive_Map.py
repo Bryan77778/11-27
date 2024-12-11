@@ -1,5 +1,8 @@
 import streamlit as st
 import leafmap.foliumap as leafmap
+import folium
+from folium import CustomIcon
+import geopandas as gpd
 
 markdown = """
 A Streamlit map template
