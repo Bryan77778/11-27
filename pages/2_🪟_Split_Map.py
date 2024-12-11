@@ -22,7 +22,30 @@ with st.expander("See source code"):
 
         m = leafmap.Map(center=[23.5, 121], zoom=7)  
         m.split_map(
-            left_layer=m.add_geojson(water_quality_stations_url),
-            right_layer=m.add_geojson(fishing_spots_url)
+            left_layer="CartoDB.Positron",
+            right_layer="CartoDB.Positron"
         )
+
+        m.add_geojson(
+             water_quality_stations_url,
+             layer_name="Water Quality Stations",
+             style_function=lambda feature: {
+                 "color": "blue",
+                 "weight": 2,
+                 "fillColor": "blue",
+                 "fillOpacity": 0.6,
+             },
+        )
+
+       m.add_geojson(
+           fishing_spots_url,
+           layer_name="Fishing Spots",
+           style_function=lambda feature: {
+               "color": "red",
+               "weight": 2,
+               "fillColor": "red",
+               "fillOpacity": 0.6,
+             },
+        )
+
 m.to_streamlit(height=700)
