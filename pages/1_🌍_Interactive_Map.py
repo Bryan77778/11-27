@@ -34,24 +34,21 @@ with col1:
     fish_icon_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/fish-solid.svg"
     water_icon_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/droplet-solid.svg"
     
-    m.add_geojson(
+    folium.GeoJson(
         water_quality_stations_url,
-        layer_name="Water Quality Stations",
-      )
+        name="Water Quality Stations",
+        marker=folium.Marker(
+            icon=folium.Icon(icon_url=water_icon_url, icon_size=(30, 30))
+        )
+    ).add_to(m)
 
-    for feature in m.get_geojson_features(water_quality_stations_url):
-        lat, lon = feature['geometry']['coordinates']
-        icon = CustomIcon(icon_url=water_icon_url, icon_size=(30, 30))
-        folium.Marker([lat, lon], icon=icon).add_to(m)
-    
-    m.add_geojson(
+    # 添加釣魚點標記並設置自定義圖標
+    folium.GeoJson(
         fishing_spots_url,
-        layer_name="Fishing Spots",
-      )
+        name="Fishing Spots",
+        marker=folium.Marker(
+            icon=folium.Icon(icon_url=fish_icon_url, icon_size=(30, 30))
+        )
+    ).add_to(m)
 
-    for feature in m.get_geojson_features(fishing_spots_url):
-        lat, lon = feature['geometry']['coordinates']
-        icon = CustomIcon(icon_url=fish_icon_url, icon_size=(30, 30))
-        folium.Marker([lat, lon], icon=icon).add_to(m)
-    
     m.to_streamlit(height=700)
