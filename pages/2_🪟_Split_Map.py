@@ -37,15 +37,15 @@ with st.expander("See source code"):
              },
         )
 
-       m.add_geojson(
-           fishing_spots_url,
-           layer_name="Fishing Spots",
-           style_function=lambda feature: {
-               "color": "red",
-               "weight": 2,
-               "fillColor": "red",
-               "fillOpacity": 0.6,
-             },
-        )
+        m.add_geojson(
+            fishing_spots_url,
+            layer_name="Fishing Spots",
+            style_function=lambda feature: {
+                "color": "red",
+                "weight": 2,
+                "fillColor": "red",
+                "fillOpacity": 0.6,
+              },
+         )
 
 m.to_streamlit(height=700)
