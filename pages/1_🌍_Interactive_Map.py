@@ -41,13 +41,13 @@ with col1:
     # 添加水質監測站標記並設置自定義圖標
     for _, feature in water_quality_stations.iterrows():
         lat, lon = feature.geometry.y, feature.geometry.x
-        icon = CustomIcon(icon_url=water_icon_url, icon_size=(30, 30))
+        icon = folium.Icon(icon_url=water_icon_url, icon_size=(30, 30))
         folium.Marker([lat, lon], icon=icon).add_to(m)
 
     # 添加釣魚點標記並設置自定義圖標
     for _, feature in fishing_spots.iterrows():
         lat, lon = feature.geometry.y, feature.geometry.x
-        icon = CustomIcon(icon_url=fish_icon_url, icon_size=(30, 30))
+        icon = folium.Icon(icon_url=fish_icon_url, icon_size=(30, 30))
         folium.Marker([lat, lon], icon=icon).add_to(m)
 
     m.to_streamlit(height=700)
