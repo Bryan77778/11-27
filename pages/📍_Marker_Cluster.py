@@ -40,8 +40,6 @@ with col1:
         water_quality_stations_gdf,
         x="lon",  # 根據實際資料調整欄位名稱
         y="lat",  # 根據實際資料調整欄位名稱
-        popup=["STATION_NAME"],  # 根據實際資料調整欄位名稱
-        icon_names=["droplet"],
         spin=True,
         add_legend=True,
         layer_name="水質監測站"
@@ -53,8 +51,6 @@ with col1:
         fishing_spots_gdf,
         x="lon",  # 根據實際資料調整欄位名稱
         y="lat",  # 根據實際資料調整欄位名稱
-        popup=["spot_name"],  # 根據實際資料調整欄位名稱
-        icon_names=["fish"],
         spin=True,
         add_legend=True,
         layer_name="釣魚點"
