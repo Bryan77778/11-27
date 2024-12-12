@@ -23,7 +23,7 @@ col1, col2 = st.columns([1, 1])
 # 在左側顯示地圖
 with col1:
     options = list(leafmap.basemaps.keys())
-    basemap = st.selectbox("選擇第一張地圖底圖:", options, index=options.index("OpenTopoMap"))
+    basemap = st.selectbox("【水質測站】選擇第一張地圖底圖:", options, index=options.index("OpenTopoMap"))
 
     water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
     fishing_spots_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E5%85%A8%E5%8F%B0%E9%96%8B%E6%94%BE%E9%87%A3%E9%BB%9E%E4%BD%8D%E7%BD%AE%20(1).geojson"
@@ -45,7 +45,7 @@ with col1:
 
 # 第二個地圖（顯示釣魚點）
 with col2:
-    basemap = st.selectbox("選擇第二張地圖底圖:", options, index=options.index("OpenStreetMap"))
+    basemap = st.selectbox("【垂釣地點】選擇第二張地圖底圖:", options, index=options.index("OpenStreetMap"))
     
     m2 = leafmap.Map(center=[25, 121], zoom=7)
     m2.add_basemap(basemap, name="垂釣地點")
