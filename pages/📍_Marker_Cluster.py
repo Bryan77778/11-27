@@ -59,5 +59,3 @@ with col1:
     # 顯示地圖
     m.to_streamlit(height=700)
 
-print(water_quality_stations_gdf.columns)
-print(fishing_spots_gdf.columns)
