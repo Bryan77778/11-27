@@ -16,7 +16,7 @@ st.sidebar.image(logo)
 
 st.title("Marker Cluster")
 
-col1, col2 = st.columns([3, 1])
+col1, col2 = st.columns([1, 1])
 
 with col2:
     options = list(leafmap.basemaps.keys())
@@ -24,19 +24,15 @@ with col2:
 
 # 在左側顯示地圖
 with col1:
-    m = leafmap.Map(
-        center=[40, -100], zoom=4, 
-        locate_control=True, latlon_control=True, draw_export=True, minimap_control=True
-    )
-    m.add_basemap(basemap)
-
-    # 定義 GeoJSON 資料的 URL
-    water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
-    fishing_spots_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E5%85%A8%E5%8F%B0%E9%96%8B%E6%94%BE%E9%87%A3%E9%BB%9E%E4%BD%8D%E7%BD%AE%20(1).geojson"
+    options = list(leafmap.basemaps.keys())
+    basemap = st.selectbox("選擇第一張地圖底圖:", options, index=options.index("OpenTopoMap"))
     
-    # 添加水質監測站資料
+    m1 = leafmap.Map(center=[25, 121], zoom=7)
+    m1.add_basemap(basemap)
+    
+    # 讀取並顯示水質監測站資料
     water_quality_stations_gdf = gpd.read_file(water_quality_stations_url)
-    m.add_points_from_xy(
+    m1.add_points_from_xy(
         water_quality_stations_gdf,
         x="LON",  # 根據實際資料調整欄位名稱
         y="LAT",  # 根據實際資料調整欄位名稱
@@ -44,18 +40,24 @@ with col1:
         add_legend=True,
         layer_name="水質監測站"
     )
+    m1.to_streamlit(height=700)
+
+# 第二個地圖（顯示釣魚點）
+with col2:
+    basemap = st.selectbox("選擇第二張地圖底圖:", options, index=options.index("OpenStreetMap"))
     
-    # 添加釣魚點資料
+    m2 = leafmap.Map(center=[25, 121], zoom=7)
+    m2.add_basemap(basemap)
+    
+    # 讀取並顯示釣魚點資料
     fishing_spots_gdf = gpd.read_file(fishing_spots_url)
-    m.add_points_from_xy(
+    m2.add_points_from_xy(
         fishing_spots_gdf,
         x="XPOS",  # 根據實際資料調整欄位名稱
-        y="YPOS	",  # 根據實際資料調整欄位名稱
+        y="YPOS",  # 根據實際資料調整欄位名稱
         spin=True,
         add_legend=True,
         layer_name="釣魚點"
     )
-
-    # 顯示地圖
-    m.to_streamlit(height=700)
+    m2.to_streamlit(height=700)
 
