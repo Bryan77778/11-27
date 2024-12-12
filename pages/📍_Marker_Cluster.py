@@ -40,9 +40,7 @@ with st.expander("See source code"):
             water_quality_stations_gdf,
             x="lon",
             y="lat",
-            popup=["STATION_NAME"],  # 替換為 GeoJSON 中的欄位名稱
             color_column=None,  # 無需使用顏色分類
-            icon_names=["droplet"],  # 自訂圖標
             spin=False,
             add_legend=False,
             layer_name="Water Quality Stations",
@@ -53,9 +51,7 @@ with st.expander("See source code"):
             fishing_spots_gdf,
             x="lon",
             y="lat",
-            popup=["name"],  # 替換為釣魚點的相關欄位名稱
             color_column=None,  # 無需使用顏色分類
-            icon_names=["fish"],  # 自訂圖標
             spin=False,
             add_legend=False,
             layer_name="Fishing Spots",
