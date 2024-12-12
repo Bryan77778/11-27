@@ -49,8 +49,8 @@ with col1:
     fishing_spots_gdf = gpd.read_file(fishing_spots_url)
     m.add_points_from_xy(
         fishing_spots_gdf,
-        x="lon",  # 根據實際資料調整欄位名稱
-        y="lat",  # 根據實際資料調整欄位名稱
+        x="XPOS",  # 根據實際資料調整欄位名稱
+        y="YPOS	",  # 根據實際資料調整欄位名稱
         spin=True,
         add_legend=True,
         layer_name="釣魚點"
