@@ -18,9 +18,7 @@ st.title("Marker Cluster")
 
 col1, col2 = st.columns([1, 1])
 
-with col2:
-    options = list(leafmap.basemaps.keys())
-    basemap = st.selectbox("選擇底圖:", options, index=options.index("OpenTopoMap"))
+
 
 # 在左側顯示地圖
 with col1:
