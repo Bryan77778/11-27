@@ -38,8 +38,8 @@ with col1:
     water_quality_stations_gdf = gpd.read_file(water_quality_stations_url)
     m.add_points_from_xy(
         water_quality_stations_gdf,
-        x="lon",  # 根據實際資料調整欄位名稱
-        y="lat",  # 根據實際資料調整欄位名稱
+        x="LON",  # 根據實際資料調整欄位名稱
+        y="LAT",  # 根據實際資料調整欄位名稱
         spin=True,
         add_legend=True,
         layer_name="水質監測站"
