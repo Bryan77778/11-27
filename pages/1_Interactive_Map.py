@@ -42,5 +42,5 @@ with col1:
         fishing_spots_url,
         layer_name="Fishing Spots",
       )
-    m.to_streamlit(height=700)
+    m.to_streamlit(height=800)
 
