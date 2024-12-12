@@ -3,6 +3,7 @@ import leafmap.foliumap as leafmap
 import folium
 from folium import CustomIcon
 import geopandas as gpd
+from streamlit_folium import st_folium
 
 markdown = """
 A Streamlit map template
