@@ -29,7 +29,7 @@ with col1:
     fishing_spots_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E5%85%A8%E5%8F%B0%E9%96%8B%E6%94%BE%E9%87%A3%E9%BB%9E%E4%BD%8D%E7%BD%AE%20(1).geojson"
 
     m1 = leafmap.Map(center=[25, 121], zoom=7)
-    m1.add_basemap(basemap)
+    m1.add_basemap(basemap, name="水質測站")
     
     # 讀取並顯示水質監測站資料
     water_quality_stations_gdf = gpd.read_file(water_quality_stations_url)
@@ -48,7 +48,7 @@ with col2:
     basemap = st.selectbox("選擇第二張地圖底圖:", options, index=options.index("OpenStreetMap"))
     
     m2 = leafmap.Map(center=[25, 121], zoom=7)
-    m2.add_basemap(basemap)
+    m2.add_basemap(basemap, name="垂釣地點")
     
     # 讀取並顯示釣魚點資料
     fishing_spots_gdf = gpd.read_file(fishing_spots_url)
