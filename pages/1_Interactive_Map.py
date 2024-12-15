@@ -17,21 +17,11 @@ st.sidebar.image(logo)
 # 主頁標題
 st.title("Interactive 3D Maps")
 
-# Shapefile URL
-county_shp_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/COUNTY_MOI_1130718.shp"
+# GeoJSON URL
 water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
 fishing_spots_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E5%85%A8%E5%8F%B0%E9%96%8B%E6%94%BE%E9%87%A3%E9%BB%9E%E4%BD%8D%E7%BD%AE%20(1).geojson"
 
-# 使用 GeoPandas 讀取縣市 shapefile
-try:
-    county_gdf = gpd.read_file(county_shp_url)
-    county_gdf = county_gdf.to_crs("EPSG:4326")
-    county_gdf["centroid"] = county_gdf.geometry.centroid
-except Exception as e:
-    st.error(f"Error loading shapefile data: {e}")
-    county_gdf = None
-
-# 使用 GeoPandas 讀取點位資料
+# 使用 GeoPandas 讀取資料
 try:
     water_quality_stations_gdf = gpd.read_file(water_quality_stations_url)
     fishing_spots_gdf = gpd.read_file(fishing_spots_url)
@@ -41,26 +31,19 @@ except Exception as e:
     fishing_spots_gdf = None
 
 # 計算各縣市點位數量
-if county_gdf is not None:
-    if water_quality_stations_gdf is not None:
-        water_quality_stations_gdf = water_quality_stations_gdf.to_crs("EPSG:4326")
-        water_quality_stations_gdf = gpd.sjoin(
-            water_quality_stations_gdf, county_gdf, how="left", predicate="intersects"
-        )
-        county_counts_wq = water_quality_stations_gdf["COUNTYNAME"].value_counts().reset_index()
-        county_counts_wq.columns = ["COUNTYNAME", "count_wq"]
-        county_gdf = county_gdf.merge(county_counts_wq, on="COUNTYNAME", how="left")
+if water_quality_stations_gdf is not None:
+    water_quality_stations_gdf = water_quality_stations_gdf.to_crs("EPSG:4326")
+    water_quality_stations_gdf["county"] = water_quality_stations_gdf.geometry.apply(lambda x: x.y)  # 假設已經有對應縣市的資料
+    county_counts_wq = water_quality_stations_gdf["county"].value_counts().reset_index()
+    county_counts_wq.columns = ["county", "count"]
 
-    if fishing_spots_gdf is not None:
-        fishing_spots_gdf = fishing_spots_gdf.to_crs("EPSG:4326")
-        fishing_spots_gdf = gpd.sjoin(
-            fishing_spots_gdf, county_gdf, how="left", predicate="intersects"
-        )
-        county_counts_fs = fishing_spots_gdf["COUNTYNAME"].value_counts().reset_index()
-        county_counts_fs.columns = ["COUNTYNAME", "count_fs"]
-        county_gdf = county_gdf.merge(county_counts_fs, on="COUNTYNAME", how="left")
+if fishing_spots_gdf is not None:
+    fishing_spots_gdf = fishing_spots_gdf.to_crs("EPSG:4326")
+    fishing_spots_gdf["county"] = fishing_spots_gdf.geometry.apply(lambda x: x.y)  # 假設已經有對應縣市的資料
+    county_counts_fs = fishing_spots_gdf["county"].value_counts().reset_index()
+    county_counts_fs.columns = ["county", "count"]
 
-# 1. 繪製點位地圖
+# 1. 點位地圖
 st.subheader("1. 點位地圖")
 m = leafmap.Map(locate_control=True, latlon_control=True, draw_export=True, minimap_control=True)
 m.add_basemap("OpenTopoMap")
@@ -68,18 +51,16 @@ if water_quality_stations_gdf is not None:
     m.add_geojson(water_quality_stations_url, layer_name="Water Quality Stations")
 if fishing_spots_gdf is not None:
     m.add_geojson(fishing_spots_url, layer_name="Fishing Spots")
-if county_gdf is not None:
-    m.add_gdf(county_gdf, layer_name="Counties")
 m.to_streamlit(height=400)
 
-# 2. 繪製縣市水質測站數量 3D 圖
+# 2. 縣市水質測站數量 3D 化
 st.subheader("2. 水質測站數量 (3D)")
-if county_gdf is not None and "count_wq" in county_gdf.columns:
+if water_quality_stations_gdf is not None:
     water_quality_layer = pdk.Layer(
         "ColumnLayer",
-        data=county_gdf.dropna(subset=["count_wq"]),
-        get_position="[centroid.x, centroid.y]",
-        get_elevation="count_wq",
+        data=county_counts_wq,
+        get_position="[geometry.x, geometry.y]",
+        get_elevation="count",
         elevation_scale=100,
         radius=5000,
         get_fill_color="[0, 128, 255, 160]",
@@ -87,8 +68,8 @@ if county_gdf is not None and "count_wq" in county_gdf.columns:
     )
 
     water_quality_view_state = pdk.ViewState(
-        latitude=county_gdf.centroid.y.mean(),
-        longitude=county_gdf.centroid.x.mean(),
+        latitude=water_quality_stations_gdf.geometry.y.mean(),
+        longitude=water_quality_stations_gdf.geometry.x.mean(),
         zoom=7,
         pitch=40,
     )
@@ -96,19 +77,19 @@ if county_gdf is not None and "count_wq" in county_gdf.columns:
     water_quality_map = pdk.Deck(
         layers=[water_quality_layer],
         initial_view_state=water_quality_view_state,
-        tooltip={"html": "<b>County:</b> {COUNTYNAME}<br><b>Count:</b> {count_wq}"},
+        tooltip={"html": "<b>County:</b> {county}<br><b>Count:</b> {count}"},
     )
 
     st.pydeck_chart(water_quality_map)
 
-# 3. 繪製縣市釣魚點數量 3D 圖
+# 3. 縣市釣魚點數量 3D 化
 st.subheader("3. 釣魚點數量 (3D)")
-if county_gdf is not None and "count_fs" in county_gdf.columns:
+if fishing_spots_gdf is not None:
     fishing_spots_layer = pdk.Layer(
         "ColumnLayer",
-        data=county_gdf.dropna(subset=["count_fs"]),
-        get_position="[centroid.x, centroid.y]",
-        get_elevation="count_fs",
+        data=county_counts_fs,
+        get_position="[geometry.x, geometry.y]",
+        get_elevation="count",
         elevation_scale=100,
         radius=5000,
         get_fill_color="[255, 165, 0, 160]",
@@ -116,8 +97,8 @@ if county_gdf is not None and "count_fs" in county_gdf.columns:
     )
 
     fishing_spots_view_state = pdk.ViewState(
-        latitude=county_gdf.centroid.y.mean(),
-        longitude=county_gdf.centroid.x.mean(),
+        latitude=fishing_spots_gdf.geometry.y.mean(),
+        longitude=fishing_spots_gdf.geometry.x.mean(),
         zoom=7,
         pitch=40,
     )
@@ -125,7 +106,7 @@ if county_gdf is not None and "count_fs" in county_gdf.columns:
     fishing_spots_map = pdk.Deck(
         layers=[fishing_spots_layer],
         initial_view_state=fishing_spots_view_state,
-        tooltip={"html": "<b>County:</b> {COUNTYNAME}<br><b>Count:</b> {count_fs}"},
+        tooltip={"html": "<b>County:</b> {county}<br><b>Count:</b> {count}"},
     )
 
     st.pydeck_chart(fishing_spots_map)
