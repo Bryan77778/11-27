@@ -1,5 +1,6 @@
 import streamlit as st
 import leafmap.foliumap as leafmap
+import geopandas as gpd
 
 st.set_page_config(layout="wide")
 
@@ -13,31 +14,58 @@ st.sidebar.info(markdown)
 logo = "https://i.imgur.com/UbOXYAU.png"
 st.sidebar.image(logo)
 
-st.title("點位雙地圖顯示")
+st.title("多圖地圖顯示")
 
-with st.expander("See source code"):
-    with st.echo():
-        water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
-        fishing_spots_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E5%85%A8%E5%8F%B0%E9%96%8B%E6%94%BE%E9%87%A3%E9%BB%9E%E4%BD%8D%E7%BD%AE%20(1).geojson"
+# 讀取資料
+water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
+fishing_spots_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E5%85%A8%E5%8F%B0%E9%96%8B%E6%94%BE%E9%87%A3%E9%BB%9E%E4%BD%8D%E7%BD%AE%20(1).geojson"
 
-        left_map = leafmap.Map(center=[23.5, 121], zoom=8) 
-        left_map.add_geojson(
-            water_quality_stations_url,
-            layer_name="Water Quality Stations",
-        )
-            
-        right_map = leafmap.Map(center=[23.5, 121], zoom=8)
-        right_map.add_geojson(
-            fishing_spots_url,
-            layer_name="Fishing Spots",
-        )
-        
-col1, col2 = st.columns(2)
+# 第一行地圖
+st.write("### 第一行地圖")
+row1_col1, row1_col2 = st.columns(2)
 
-with col1:
-    st.write("### 左側地圖：水質測站")
-    left_map.to_streamlit(height=500)
+with row1_col1:
+    st.write("#### 左側地圖：水質測站 (點位圖)")
+    m1 = leafmap.Map(center=[23.5, 121], zoom=8)
+    m1.add_geojson(water_quality_stations_url, layer_name="Water Quality Stations")
+    m1.to_streamlit(height=500)
 
-with col2:
-    st.write("### 右側地圖：釣魚點")
-    right_map.to_streamlit(height=500)
+with row1_col2:
+    st.write("#### 右側地圖：釣魚點 (點位圖)")
+    m2 = leafmap.Map(center=[23.5, 121], zoom=8)
+    m2.add_geojson(fishing_spots_url, layer_name="Fishing Spots")
+    m2.to_streamlit(height=500)
+
+# 第二行地圖
+st.write("### 第二行地圖")
+row2_col1, row2_col2 = st.columns(2)
+
+# 使用 Geopandas 讀取資料
+water_quality_stations_gdf = gpd.read_file(water_quality_stations_url)
+fishing_spots_gdf = gpd.read_file(fishing_spots_url)
+
+with row2_col1:
+    st.write("#### 左側地圖：水質測站 (聚合點圖)")
+    m3 = leafmap.Map(center=[23.5, 121], zoom=8)
+    m3.add_points_from_xy(
+        water_quality_stations_gdf,
+        x="LON",  # 根據實際資料調整欄位名稱
+        y="LAT",  # 根據實際資料調整欄位名稱
+        spin=True,
+        add_legend=True,
+        layer_name="水質監測站",
+    )
+    m3.to_streamlit(height=500)
+
+with row2_col2:
+    st.write("#### 右側地圖：釣魚點 (聚合點圖)")
+    m4 = leafmap.Map(center=[23.5, 121], zoom=8)
+    m4.add_points_from_xy(
+        fishing_spots_gdf,
+        x="XPOS",  # 根據實際資料調整欄位名稱
+        y="YPOS",  # 根據實際資料調整欄位名稱
+        spin=True,
+        add_legend=True,
+        layer_name="釣魚點",
+    )
+    m4.to_streamlit(height=500)
