@@ -74,10 +74,11 @@ m.to_streamlit(height=400)
 # 2. 繪製縣市水質測站數量 3D 圖
 st.subheader("2. 水質測站數量 (3D)")
 if county_gdf is not None and "count_wq" in county_gdf.columns:
+    county_gdf["centroid"] = county_gdf.geometry.centroid
     water_quality_layer = pdk.Layer(
         "ColumnLayer",
         data=county_gdf.dropna(subset=["count_wq"]),
-        get_position="[geometry.centroid.x, geometry.centroid.y]",
+        get_position="[centroid.x, centroid.y]",
         get_elevation="count_wq",
         elevation_scale=100,
         radius=5000,
@@ -86,8 +87,8 @@ if county_gdf is not None and "count_wq" in county_gdf.columns:
     )
 
     water_quality_view_state = pdk.ViewState(
-        latitude=county_gdf.geometry.centroid.y.mean(),
-        longitude=county_gdf.geometry.centroid.x.mean(),
+        latitude=county_gdf.centroid.y.mean(),
+        longitude=county_gdf.centroid.x.mean(),
         zoom=7,
         pitch=40,
     )
@@ -106,7 +107,7 @@ if county_gdf is not None and "count_fs" in county_gdf.columns:
     fishing_spots_layer = pdk.Layer(
         "ColumnLayer",
         data=county_gdf.dropna(subset=["count_fs"]),
-        get_position="[geometry.centroid.x, geometry.centroid.y]",
+        get_position="[centroid.x, centroid.y]",
         get_elevation="count_fs",
         elevation_scale=100,
         radius=5000,
@@ -115,8 +116,8 @@ if county_gdf is not None and "count_fs" in county_gdf.columns:
     )
 
     fishing_spots_view_state = pdk.ViewState(
-        latitude=county_gdf.geometry.centroid.y.mean(),
-        longitude=county_gdf.geometry.centroid.x.mean(),
+        latitude=county_gdf.centroid.y.mean(),
+        longitude=county_gdf.centroid.x.mean(),
         zoom=7,
         pitch=40,
     )
@@ -137,4 +138,5 @@ if water_quality_stations_gdf is not None:
 st.subheader("Fishing Spots Data")
 if fishing_spots_gdf is not None:
     st.dataframe(fishing_spots_gdf.head(10))  # 顯示前10筆資料
+
 
