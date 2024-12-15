@@ -1,6 +1,7 @@
 import streamlit as st
 import leafmap.foliumap as leafmap
 import geopandas as gpd
+import pydeck as pdk
 
 # 左側欄的資訊
 markdown = """
@@ -14,15 +15,7 @@ logo = "https://i.imgur.com/UbOXYAU.png"
 st.sidebar.image(logo)
 
 # 主頁標題
-st.title("Interactive Map")
-
-# 分成兩個區塊 (地圖與選擇欄)
-col1, col2 = st.columns([4, 1])
-options = list(leafmap.basemaps.keys())
-index = options.index("OpenTopoMap")
-
-with col2:
-    basemap = st.selectbox("Select a basemap:", options, index)
+st.title("Interactive 3D Maps")
 
 # GeoJSON URL
 water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
@@ -37,33 +30,81 @@ except Exception as e:
     water_quality_stations_gdf = None
     fishing_spots_gdf = None
 
-with col1:
-    # 建立 Leafmap 地圖
-    m = leafmap.Map(
-        locate_control=True, latlon_control=True, draw_export=True, minimap_control=True
+# 分割頁面為三個區塊
+st.subheader("1. 點位地圖")
+m = leafmap.Map(locate_control=True, latlon_control=True, draw_export=True, minimap_control=True)
+m.add_basemap("OpenTopoMap")
+if water_quality_stations_gdf is not None:
+    m.add_geojson(water_quality_stations_url, layer_name="Water Quality Stations")
+if fishing_spots_gdf is not None:
+    m.add_geojson(fishing_spots_url, layer_name="Fishing Spots")
+m.to_streamlit(height=400)
+
+# 第一個地圖: 水質測站 3D 化
+st.subheader("2. 水質測站 (3D)")
+if water_quality_stations_gdf is not None:
+    water_quality_stations_gdf = water_quality_stations_gdf.to_crs("EPSG:4326")
+    water_quality_layer = pdk.Layer(
+        "ScatterplotLayer",
+        data=water_quality_stations_gdf,
+        get_position="[geometry.x, geometry.y]",
+        get_color="[0, 128, 255, 160]",
+        get_radius=100,
+        pickable=True,
     )
-    m.add_basemap(basemap)
 
-    # 新增 GeoJSON 到地圖
-    if water_quality_stations_gdf is not None:
-        m.add_geojson(
-            water_quality_stations_url,
-            layer_name="Water Quality Stations",
-        )
+    water_quality_view_state = pdk.ViewState(
+        latitude=water_quality_stations_gdf.geometry.y.mean(),
+        longitude=water_quality_stations_gdf.geometry.x.mean(),
+        zoom=8,
+        pitch=40,
+    )
 
-    if fishing_spots_gdf is not None:
-        m.add_geojson(
-            fishing_spots_url,
-            layer_name="Fishing Spots",
-        )
+    water_quality_map = pdk.Deck(
+        layers=[water_quality_layer],
+        initial_view_state=water_quality_view_state,
+        tooltip={"html": "<b>Station:</b> {STATION_NAME}"},
+    )
 
-    # 顯示地圖於 Streamlit
-    m.to_streamlit(height=800)
+    st.pydeck_chart(water_quality_map)
 
-# 顯示 GeoJSON 屬性資料表
+# 第二個地圖: 釣魚點 3D 化
+st.subheader("3. 釣魚點 (3D)")
+if fishing_spots_gdf is not None:
+    fishing_spots_gdf = fishing_spots_gdf.to_crs("EPSG:4326")
+    fishing_spots_layer = pdk.Layer(
+        "ScatterplotLayer",
+        data=fishing_spots_gdf,
+        get_position="[geometry.x, geometry.y]",
+        get_color="[255, 165, 0, 160]",
+        get_radius=100,
+        pickable=True,
+    )
+
+    fishing_spots_view_state = pdk.ViewState(
+        latitude=fishing_spots_gdf.geometry.y.mean(),
+        longitude=fishing_spots_gdf.geometry.x.mean(),
+        zoom=8,
+        pitch=40,
+    )
+
+    fishing_spots_map = pdk.Deck(
+        layers=[fishing_spots_layer],
+        initial_view_state=fishing_spots_view_state,
+        tooltip={"html": "<b>Fishing Spot:</b> {NAME}"},
+    )
+
+    st.pydeck_chart(fishing_spots_map)
+
+# 顯示屬性資料表
 st.subheader("Water Quality Stations Data")
 if water_quality_stations_gdf is not None:
     st.dataframe(water_quality_stations_gdf.head(10))  # 顯示前10筆資料
+
+st.subheader("Fishing Spots Data")
+if fishing_spots_gdf is not None:
+    st.dataframe(fishing_spots_gdf.head(10))  # 顯示前10筆資料
+
 
 st.subheader("Fishing Spots Data")
 if fishing_spots_gdf is not None:
