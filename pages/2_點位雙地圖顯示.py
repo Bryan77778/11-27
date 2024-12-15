@@ -48,22 +48,28 @@ st.write("### 第二行地圖")
 row2_col1, row2_col2 = st.columns(2)
 
 # 使用 Geopandas 讀取資料
-water_quality_stations_gdf = gpd.read_file(water_quality_stations_url)
-fishing_spots_gdf = gpd.read_file(fishing_spots_url)
+try:
+    water_quality_stations_gdf = gpd.read_file(water_quality_stations_url)
+    fishing_spots_gdf = gpd.read_file(fishing_spots_url)
+except Exception as e:
+    st.error(f"Error loading GeoJSON data: {e}")
+    water_quality_stations_gdf = None
+    fishing_spots_gdf = None
 
 with row2_col1:
     basemap3 = st.selectbox("選擇左下地圖的底圖:", basemap_options, index=basemap_options.index("CartoDB.Positron"))
     st.write("#### 左側地圖：水質測站 (聚合點圖)")
     m3 = leafmap.Map(center=[23.5, 121], zoom=8)
     m3.add_basemap(basemap3)
-    m3.add_points_from_xy(
-        water_quality_stations_gdf,
-        x="LON",  # 根據實際資料調整欄位名稱
-        y="LAT",  # 根據實際資料調整欄位名稱
-        spin=True,
-        add_legend=True,
-        layer_name="水質監測站",
-    )
+    if water_quality_stations_gdf is not None:
+        m3.add_points_from_xy(
+            water_quality_stations_gdf,
+            x="LON",  # 根據實際資料調整欄位名稱
+            y="LAT",  # 根據實際資料調整欄位名稱
+            spin=True,
+            add_legend=True,
+            layer_name="水質監測站",
+        )
     m3.to_streamlit(height=500)
 
 with row2_col2:
@@ -71,12 +77,14 @@ with row2_col2:
     st.write("#### 右側地圖：釣魚點 (聚合點圖)")
     m4 = leafmap.Map(center=[23.5, 121], zoom=8)
     m4.add_basemap(basemap4)
-    m4.add_points_from_xy(
-        fishing_spots_gdf,
-        x="XPOS",  # 根據實際資料調整欄位名稱
-        y="YPOS",  # 根據實際資料調整欄位名稱
-        spin=True,
-        add_legend=True,
-        layer_name="釣魚點",
-    )
+    if fishing_spots_gdf is not None:
+        m4.add_points_from_xy(
+            fishing_spots_gdf,
+            x="XPOS",  # 根據實際資料調整欄位名稱
+            y="YPOS",  # 根據實際資料調整欄位名稱
+            spin=True,
+            add_legend=True,
+            layer_name="釣魚點",
+        )
     m4.to_streamlit(height=500)
+
