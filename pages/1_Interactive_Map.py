@@ -40,16 +40,24 @@ if fishing_spots_gdf is not None:
     m.add_geojson(fishing_spots_url, layer_name="Fishing Spots")
 m.to_streamlit(height=400)
 
+# 計算 Z 軸數據
+if water_quality_stations_gdf is not None:
+    water_quality_stations_gdf["elevation"] = range(1, len(water_quality_stations_gdf) + 1)
+if fishing_spots_gdf is not None:
+    fishing_spots_gdf["elevation"] = range(1, len(fishing_spots_gdf) + 1)
+
 # 第一個地圖: 水質測站 3D 化
 st.subheader("2. 水質測站 (3D)")
 if water_quality_stations_gdf is not None:
     water_quality_stations_gdf = water_quality_stations_gdf.to_crs("EPSG:4326")
     water_quality_layer = pdk.Layer(
-        "ScatterplotLayer",
+        "ColumnLayer",
         data=water_quality_stations_gdf,
         get_position="[geometry.x, geometry.y]",
-        get_color="[0, 128, 255, 160]",
-        get_radius=100,
+        get_elevation="elevation",
+        elevation_scale=100,
+        radius=500,
+        get_fill_color="[0, 128, 255, 160]",
         pickable=True,
     )
 
@@ -73,11 +81,13 @@ st.subheader("3. 釣魚點 (3D)")
 if fishing_spots_gdf is not None:
     fishing_spots_gdf = fishing_spots_gdf.to_crs("EPSG:4326")
     fishing_spots_layer = pdk.Layer(
-        "ScatterplotLayer",
+        "ColumnLayer",
         data=fishing_spots_gdf,
         get_position="[geometry.x, geometry.y]",
-        get_color="[255, 165, 0, 160]",
-        get_radius=100,
+        get_elevation="elevation",
+        elevation_scale=100,
+        radius=500,
+        get_fill_color="[255, 165, 0, 160]",
         pickable=True,
     )
 
