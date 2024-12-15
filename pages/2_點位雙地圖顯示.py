@@ -45,7 +45,7 @@ water_quality_stations_gdf = gpd.read_file(water_quality_stations_url)
 fishing_spots_gdf = gpd.read_file(fishing_spots_url)
 
 with row2_col1:
-    st.write("#### 左側地圖：水質測站 (聚合點圖)")
+    st.write("#### 左側地圖：水質測站 (Marker Cluster)")
     m3 = leafmap.Map(center=[23.5, 121], zoom=8)
     m3.add_points_from_xy(
         water_quality_stations_gdf,
@@ -58,7 +58,7 @@ with row2_col1:
     m3.to_streamlit(height=500)
 
 with row2_col2:
-    st.write("#### 右側地圖：釣魚點 (聚合點圖)")
+    st.write("#### 右側地圖：釣魚點 (Marker Cluster)")
     m4 = leafmap.Map(center=[23.5, 121], zoom=8)
     m4.add_points_from_xy(
         fishing_spots_gdf,
