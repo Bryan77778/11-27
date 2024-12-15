@@ -104,8 +104,3 @@ if water_quality_stations_gdf is not None:
 st.subheader("Fishing Spots Data")
 if fishing_spots_gdf is not None:
     st.dataframe(fishing_spots_gdf.head(10))  # 顯示前10筆資料
-
-
-st.subheader("Fishing Spots Data")
-if fishing_spots_gdf is not None:
-    st.dataframe(fishing_spots_gdf.head(10))  # 顯示前10筆資料
