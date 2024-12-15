@@ -15,23 +15,6 @@ logo = "https://i.imgur.com/UbOXYAU.png"
 st.sidebar.image(logo)
 
 # 主頁標題
-st.title("Interactive 3D Maps")import streamlit as st
-import leafmap.foliumap as leafmap
-import geopandas as gpd
-import pydeck as pdk
-
-# 左側欄的資訊
-markdown = """
-A Streamlit map template
-<https://github.com/opengeos/streamlit-map-template>
-"""
-
-st.sidebar.title("About")
-st.sidebar.info(markdown)
-logo = "https://i.imgur.com/UbOXYAU.png"
-st.sidebar.image(logo)
-
-# 主頁標題
 st.title("Interactive 3D Maps")
 
 # Shapefile URL
@@ -155,6 +138,3 @@ if water_quality_stations_gdf is not None:
 st.subheader("Fishing Spots Data")
 if fishing_spots_gdf is not None:
     st.dataframe(fishing_spots_gdf.head(10))  # 顯示前10筆資料
-
-
-
