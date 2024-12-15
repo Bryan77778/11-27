@@ -30,7 +30,20 @@ except Exception as e:
     water_quality_stations_gdf = None
     fishing_spots_gdf = None
 
-# 分割頁面為三個區塊
+# 計算各縣市點位數量
+if water_quality_stations_gdf is not None:
+    water_quality_stations_gdf = water_quality_stations_gdf.to_crs("EPSG:4326")
+    water_quality_stations_gdf["county"] = water_quality_stations_gdf.geometry.apply(lambda x: x.y)  # 假設已經有對應縣市的資料
+    county_counts_wq = water_quality_stations_gdf["county"].value_counts().reset_index()
+    county_counts_wq.columns = ["county", "count"]
+
+if fishing_spots_gdf is not None:
+    fishing_spots_gdf = fishing_spots_gdf.to_crs("EPSG:4326")
+    fishing_spots_gdf["county"] = fishing_spots_gdf.geometry.apply(lambda x: x.y)  # 假設已經有對應縣市的資料
+    county_counts_fs = fishing_spots_gdf["county"].value_counts().reset_index()
+    county_counts_fs.columns = ["county", "count"]
+
+# 1. 點位地圖
 st.subheader("1. 點位地圖")
 m = leafmap.Map(locate_control=True, latlon_control=True, draw_export=True, minimap_control=True)
 m.add_basemap("OpenTopoMap")
@@ -40,23 +53,16 @@ if fishing_spots_gdf is not None:
     m.add_geojson(fishing_spots_url, layer_name="Fishing Spots")
 m.to_streamlit(height=400)
 
-# 計算 Z 軸數據
+# 2. 縣市水質測站數量 3D 化
+st.subheader("2. 水質測站數量 (3D)")
 if water_quality_stations_gdf is not None:
-    water_quality_stations_gdf["elevation"] = range(1, len(water_quality_stations_gdf) + 1)
-if fishing_spots_gdf is not None:
-    fishing_spots_gdf["elevation"] = range(1, len(fishing_spots_gdf) + 1)
-
-# 第一個地圖: 水質測站 3D 化
-st.subheader("2. 水質測站 (3D)")
-if water_quality_stations_gdf is not None:
-    water_quality_stations_gdf = water_quality_stations_gdf.to_crs("EPSG:4326")
     water_quality_layer = pdk.Layer(
         "ColumnLayer",
-        data=water_quality_stations_gdf,
+        data=county_counts_wq,
         get_position="[geometry.x, geometry.y]",
-        get_elevation="elevation",
+        get_elevation="count",
         elevation_scale=100,
-        radius=500,
+        radius=5000,
         get_fill_color="[0, 128, 255, 160]",
         pickable=True,
     )
@@ -64,29 +70,28 @@ if water_quality_stations_gdf is not None:
     water_quality_view_state = pdk.ViewState(
         latitude=water_quality_stations_gdf.geometry.y.mean(),
         longitude=water_quality_stations_gdf.geometry.x.mean(),
-        zoom=8,
+        zoom=7,
         pitch=40,
     )
 
     water_quality_map = pdk.Deck(
         layers=[water_quality_layer],
         initial_view_state=water_quality_view_state,
-        tooltip={"html": "<b>Station:</b> {STATION_NAME}"},
+        tooltip={"html": "<b>County:</b> {county}<br><b>Count:</b> {count}"},
     )
 
     st.pydeck_chart(water_quality_map)
 
-# 第二個地圖: 釣魚點 3D 化
-st.subheader("3. 釣魚點 (3D)")
+# 3. 縣市釣魚點數量 3D 化
+st.subheader("3. 釣魚點數量 (3D)")
 if fishing_spots_gdf is not None:
-    fishing_spots_gdf = fishing_spots_gdf.to_crs("EPSG:4326")
     fishing_spots_layer = pdk.Layer(
         "ColumnLayer",
-        data=fishing_spots_gdf,
+        data=county_counts_fs,
         get_position="[geometry.x, geometry.y]",
-        get_elevation="elevation",
+        get_elevation="count",
         elevation_scale=100,
-        radius=500,
+        radius=5000,
         get_fill_color="[255, 165, 0, 160]",
         pickable=True,
     )
@@ -94,14 +99,14 @@ if fishing_spots_gdf is not None:
     fishing_spots_view_state = pdk.ViewState(
         latitude=fishing_spots_gdf.geometry.y.mean(),
         longitude=fishing_spots_gdf.geometry.x.mean(),
-        zoom=8,
+        zoom=7,
         pitch=40,
     )
 
     fishing_spots_map = pdk.Deck(
         layers=[fishing_spots_layer],
         initial_view_state=fishing_spots_view_state,
-        tooltip={"html": "<b>Fishing Spot:</b> {NAME}"},
+        tooltip={"html": "<b>County:</b> {county}<br><b>Count:</b> {count}"},
     )
 
     st.pydeck_chart(fishing_spots_map)
