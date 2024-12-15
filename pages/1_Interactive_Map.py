@@ -15,6 +15,23 @@ logo = "https://i.imgur.com/UbOXYAU.png"
 st.sidebar.image(logo)
 
 # 主頁標題
+st.title("Interactive 3D Maps")import streamlit as st
+import leafmap.foliumap as leafmap
+import geopandas as gpd
+import pydeck as pdk
+
+# 左側欄的資訊
+markdown = """
+A Streamlit map template
+<https://github.com/opengeos/streamlit-map-template>
+"""
+
+st.sidebar.title("About")
+st.sidebar.info(markdown)
+logo = "https://i.imgur.com/UbOXYAU.png"
+st.sidebar.image(logo)
+
+# 主頁標題
 st.title("Interactive 3D Maps")
 
 # Shapefile URL
@@ -26,6 +43,7 @@ fishing_spots_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E5
 try:
     county_gdf = gpd.read_file(county_shp_url)
     county_gdf = county_gdf.to_crs("EPSG:4326")
+    county_gdf["centroid"] = county_gdf.geometry.centroid
 except Exception as e:
     st.error(f"Error loading shapefile data: {e}")
     county_gdf = None
@@ -74,7 +92,6 @@ m.to_streamlit(height=400)
 # 2. 繪製縣市水質測站數量 3D 圖
 st.subheader("2. 水質測站數量 (3D)")
 if county_gdf is not None and "count_wq" in county_gdf.columns:
-    county_gdf["centroid"] = county_gdf.geometry.centroid
     water_quality_layer = pdk.Layer(
         "ColumnLayer",
         data=county_gdf.dropna(subset=["count_wq"]),
@@ -138,5 +155,6 @@ if water_quality_stations_gdf is not None:
 st.subheader("Fishing Spots Data")
 if fishing_spots_gdf is not None:
     st.dataframe(fishing_spots_gdf.head(10))  # 顯示前10筆資料
+
 
 
