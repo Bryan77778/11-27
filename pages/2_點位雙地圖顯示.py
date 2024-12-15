@@ -36,7 +36,7 @@ with row1_col1:
     m1.to_streamlit(height=500)
 
 with row1_col2:
-    basemap2 = st.selectbox("選擇右側地圖的底圖:", basemap_options, index=basemap_options.index("OpenTopoMap"))
+    basemap2 = st.selectbox("選擇右側地圖的底圖:", basemap_options, index=basemap_options.index("OpenStreetMap"))
     st.write("#### 右側地圖：釣魚點 (點位圖)")
     m2 = leafmap.Map(center=[23.5, 121], zoom=8)
     m2.add_basemap(basemap2)
@@ -57,7 +57,7 @@ except Exception as e:
     fishing_spots_gdf = None
 
 with row2_col1:
-    basemap3 = st.selectbox("選擇左下地圖的底圖:", basemap_options, index=basemap_options.index("CartoDB.Positron"))
+    basemap3 = st.selectbox("選擇左下地圖的底圖:", basemap_options, index=basemap_options.index("OpenStreetMap"))
     st.write("#### 左側地圖：水質測站 (聚合點圖)")
     m3 = leafmap.Map(center=[23.5, 121], zoom=8)
     m3.add_basemap(basemap3)
@@ -73,7 +73,7 @@ with row2_col1:
     m3.to_streamlit(height=500)
 
 with row2_col2:
-    basemap4 = st.selectbox("選擇右下地圖的底圖:", basemap_options, index=basemap_options.index("Stamen.Terrain"))
+    basemap4 = st.selectbox("選擇右下地圖的底圖:", basemap_options, index=basemap_options.index("OpenStreetMap"))
     st.write("#### 右側地圖：釣魚點 (聚合點圖)")
     m4 = leafmap.Map(center=[23.5, 121], zoom=8)
     m4.add_basemap(basemap4)
