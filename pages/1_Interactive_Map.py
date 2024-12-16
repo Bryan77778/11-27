@@ -30,28 +30,18 @@ except Exception as e:
     water_quality_stations_gdf = None
     fishing_spots_gdf = None
 
-# 計算各縣市的點位數量與中心點座標
-def prepare_count_data(gdf):
-    # 確保座標系統正確
-    gdf = gdf.to_crs("EPSG:4326")
-    # 計算縣市名稱及其點數
-    county_counts = gdf.groupby("COUNTY").size().reset_index(name="count")
-    # 計算各縣市中心點
-    centroids = gdf.dissolve(by="COUNTY").centroid.reset_index()
-    # 合併中心點與點數
-    county_counts = county_counts.merge(centroids, on="COUNTY")
-    # 轉換座標為經緯度
-    county_counts["lon"] = county_counts.geometry.x
-    county_counts["lat"] = county_counts.geometry.y
-    return county_counts
-
-# 處理水質測站資料
+# 計算各縣市點位數量
 if water_quality_stations_gdf is not None:
-    county_counts_wq = prepare_count_data(water_quality_stations_gdf)
+    water_quality_stations_gdf = water_quality_stations_gdf.to_crs("EPSG:4326")
+    water_quality_stations_gdf["county"] = water_quality_stations_gdf.geometry.apply(lambda x: x.y)  # 假設已經有對應縣市的資料
+    county_counts_wq = water_quality_stations_gdf["county"].value_counts().reset_index()
+    county_counts_wq.columns = ["county", "count"]
 
-# 處理釣魚點資料
 if fishing_spots_gdf is not None:
-    county_counts_fs = prepare_count_data(fishing_spots_gdf)
+    fishing_spots_gdf = fishing_spots_gdf.to_crs("EPSG:4326")
+    fishing_spots_gdf["county"] = fishing_spots_gdf.geometry.apply(lambda x: x.y)  # 假設已經有對應縣市的資料
+    county_counts_fs = fishing_spots_gdf["county"].value_counts().reset_index()
+    county_counts_fs.columns = ["county", "count"]
 
 # 1. 點位地圖
 st.subheader("1. 點位地圖")
@@ -69,7 +59,7 @@ if water_quality_stations_gdf is not None:
     water_quality_layer = pdk.Layer(
         "ColumnLayer",
         data=county_counts_wq,
-        get_position=["lon", "lat"],
+        get_position="[geometry.x, geometry.y]",
         get_elevation="count",
         elevation_scale=100,
         radius=5000,
@@ -78,8 +68,8 @@ if water_quality_stations_gdf is not None:
     )
 
     water_quality_view_state = pdk.ViewState(
-        latitude=county_counts_wq["lat"].mean(),
-        longitude=county_counts_wq["lon"].mean(),
+        latitude=water_quality_stations_gdf.geometry.y.mean(),
+        longitude=water_quality_stations_gdf.geometry.x.mean(),
         zoom=7,
         pitch=40,
     )
@@ -87,7 +77,7 @@ if water_quality_stations_gdf is not None:
     water_quality_map = pdk.Deck(
         layers=[water_quality_layer],
         initial_view_state=water_quality_view_state,
-        tooltip={"html": "<b>County:</b> {COUNTY}<br><b>Count:</b> {count}"},
+        tooltip={"html": "<b>County:</b> {county}<br><b>Count:</b> {count}"},
     )
 
     st.pydeck_chart(water_quality_map)
@@ -98,7 +88,7 @@ if fishing_spots_gdf is not None:
     fishing_spots_layer = pdk.Layer(
         "ColumnLayer",
         data=county_counts_fs,
-        get_position=["lon", "lat"],
+        get_position="[geometry.x, geometry.y]",
         get_elevation="count",
         elevation_scale=100,
         radius=5000,
@@ -107,8 +97,8 @@ if fishing_spots_gdf is not None:
     )
 
     fishing_spots_view_state = pdk.ViewState(
-        latitude=county_counts_fs["lat"].mean(),
-        longitude=county_counts_fs["lon"].mean(),
+        latitude=fishing_spots_gdf.geometry.y.mean(),
+        longitude=fishing_spots_gdf.geometry.x.mean(),
         zoom=7,
         pitch=40,
     )
@@ -116,7 +106,7 @@ if fishing_spots_gdf is not None:
     fishing_spots_map = pdk.Deck(
         layers=[fishing_spots_layer],
         initial_view_state=fishing_spots_view_state,
-        tooltip={"html": "<b>County:</b> {COUNTY}<br><b>Count:</b> {count}"},
+        tooltip={"html": "<b>County:</b> {county}<br><b>Count:</b> {count}"},
     )
 
     st.pydeck_chart(fishing_spots_map)
@@ -126,9 +116,6 @@ st.subheader("Water Quality Stations Data")
 if water_quality_stations_gdf is not None:
     st.dataframe(water_quality_stations_gdf.head(10))  # 顯示前10筆資料
 
-st.subheader("Fishing Spots Data")
-if fishing_spots_gdf is not None:
-    st.dataframe(fishing_spots_gdf.head(10))  # 顯示前10筆資料
 st.subheader("Fishing Spots Data")
 if fishing_spots_gdf is not None:
     st.dataframe(fishing_spots_gdf.head(10))  # 顯示前10筆資料
