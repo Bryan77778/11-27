@@ -74,7 +74,7 @@ def create_heatmap(data, value_columns, title):
         st.dataframe(outliers[["STATION_NAME", "LAT", "LON", value]])
 
         # 繪製直方圖
-        fig, ax = plt.subplots(figsize=(5, 1))
+        fig, ax = plt.subplots(figsize=(1, 0.5))
         ax.hist(data[value].dropna(), bins=20, color='royalblue', edgecolor='black', alpha=0.7)
         ax.axvline(upper_bound, color='red', linestyle='dashed', linewidth=2, label=f"90% 分位數: {upper_bound:.4f}")
         ax.set_title(f"{value} 直方圖", fontsize=12)
