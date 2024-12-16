@@ -2,6 +2,7 @@ import streamlit as st
 import leafmap.foliumap as leafmap
 import geopandas as gpd
 import pandas as pd
+import numpy as np
 
 # 設定 Streamlit 頁面配置
 st.set_page_config(layout="wide")
