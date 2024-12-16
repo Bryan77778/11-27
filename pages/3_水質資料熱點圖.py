@@ -56,7 +56,7 @@ def create_heatmap(data, value_columns, title):
     m.to_streamlit(height=500)
 
     # 在地圖下方顯示屬性資料表
-    st.write(f"{title}物質數值概況")
+    st.write(f"{title}數值概況")
     st.dataframe(data[["STATION_NAME", "LAT", "LON"] + value_columns])
 # 重金屬熱點圖
 create_heatmap(data, heavy_metals, "重金屬熱點圖")
