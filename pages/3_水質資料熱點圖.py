@@ -1,6 +1,7 @@
 import streamlit as st
 import leafmap.foliumap as leafmap
 import geopandas as gpd
+import pandas as pd
 
 # 設定 Streamlit 頁面配置
 st.set_page_config(layout="wide")
@@ -28,9 +29,20 @@ organic_compounds = ['NO3_N', 'MI3PO4', 'NO2_N', 'SiO2']
 suspended_solids = ['SS']
 
 # 建立熱點圖函數
+
 def create_heatmap(data, value_columns, title):
     st.subheader(title)
     m = leafmap.Map(center=[23.5, 121], zoom=7)
+
+    # 加入測站點位
+    m.add_points_from_xy(
+        data,
+        x="LON",
+        y="LAT",
+        color_column=None,
+        popup=["STATION_NAME", "TYPE"]
+    )
+
     for value in value_columns:
         m.add_heatmap(
             data,
@@ -40,13 +52,18 @@ def create_heatmap(data, value_columns, title):
             name=f"{value} Heatmap",
             radius=20,
         )
+
     m.to_streamlit(height=500)
 
+    # 在地圖下方顯示屬性資料表
+    st.write(f"Attribute Table for {title}")
+    st.dataframe(data[["STATION_NAME", "LAT", "LON"] + value_columns])
+
 # 重金屬熱點圖
-create_heatmap(data, heavy_metals, "Heavy Metals Heatmap")
+create_heatmap(data, heavy_metals, "重金屬熱點圖")
 
 # 有機化合物熱點圖
-create_heatmap(data, organic_compounds, "Organic Compounds Heatmap")
+create_heatmap(data, organic_compounds, "有機化合物熱點圖")
 
 # 懸浮物質熱點圖
-create_heatmap(data, suspended_solids, "Suspended Solids Heatmap")
+create_heatmap(data, suspended_solids, "懸浮物質熱點圖")
