@@ -64,14 +64,19 @@ def create_heatmap(data, value_columns, title):
     for value in value_columns:
         upper_bound = np.percentile(data[value].dropna(), 90)
         outliers = data[data[value] > upper_bound]
-        st.write(f"{value} 的離群測站: {len(outliers)} 個")
-        st.dataframe(outliers[["STATION_NAME", "LAT", "LON", value]])
-
-        # 顯示長條圖
-        st.bar_chart(outliers.set_index("STATION_NAME")[value])
-        st.write(f"{value} 的上界值（90百分位數）: {upper_bound}")
-        st.write("--------------------")
-
+        
+        # 檢查離群測站數量是否 >= 5
+        if len(outliers) >= 5:
+            st.write(f"{value} 的離群測站: {len(outliers)} 個")
+            st.dataframe(outliers[["STATION_NAME", "LAT", "LON", value]])
+            
+            # 顯示長條圖
+            st.bar_chart(outliers.set_index("STATION_NAME")[value])
+            st.write(f"{value} 的上界值（90百分位數）: {upper_bound}")
+            st.write("--------------------")
+        else:
+            st.write(f"{value} 的離群測站數量不足 5 個，無法繪製直方圖。")
+            st.write("--------------------")
 # 重金屬熱點圖
 create_heatmap(data, heavy_metals, "重金屬熱點圖")
 
