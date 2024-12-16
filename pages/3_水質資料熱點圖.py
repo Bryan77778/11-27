@@ -30,7 +30,7 @@ suspended_solids = ['SS']
 # 建立熱點圖函數
 def create_heatmap(data, value_columns, title):
     st.subheader(title)
-    m = leafmap.Map(center=[23.5, 121], zoom=7, tiles="stamen toner")  # 修正 tiles 為 "stamen toner" 並增加 attribution
+    m = leafmap.Map(center=[23.5, 121], zoom=7)
     for value in value_columns:
         m.add_heatmap(
             data,
