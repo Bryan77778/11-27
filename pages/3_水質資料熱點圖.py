@@ -56,20 +56,22 @@ def create_heatmap(data, value_columns, title):
 
     m.to_streamlit(height=500)
 
-    # 在地圖下方顯示屬性資料表
-    st.write(f"{title}數值概況")
-    st.dataframe(data[["STATION_NAME", "LAT", "LON"] + value_columns])
-    st.write(f"Outlier Detection for {title}")
-    for value in value_columns:
-        upper_bound = np.percentile(data[value].dropna(), 90)
-        outliers = data[data[value] > upper_bound]
-        st.write(f"{value} 的離群測站: {len(outliers)} 個")
-        st.dataframe(outliers[["STATION_NAME", "LAT", "LON", value]])
+    col1, col2 = st.columns([2, 1])
 
-        # 顯示長條圖
-        st.bar_chart(outliers.set_index("STATION_NAME")[value])
-        st.write(f"{value} 的上界值（90百分位數）: {upper_bound}")
-        st.write("--------------------")
+    with col1:
+        st.write(f"Attribute Table for {title}")
+        st.dataframe(data["STATION_NAME", "LAT", "LON"] + value_columns)
+
+    with col2:
+        st.write(f"Outlier Detection for {title}")
+        for value in value_columns:
+            upper_bound = np.percentile(data[value].dropna(), 90)
+            outliers = data[data[value] > upper_bound]
+            st.write(f"{value} 的離群測站: {len(outliers)} 個")
+            st.dataframe(outliers[["STATION_NAME", "LAT", "LON", value]])
+            st.bar_chart(outliers.set_index("STATION_NAME")[value])
+            st.write(f"{value} 的上界值（90百分位數）: {upper_bound}")
+            st.write("--------------------")
 
 # 重金屬熱點圖
 create_heatmap(data, heavy_metals, "重金屬熱點圖")
