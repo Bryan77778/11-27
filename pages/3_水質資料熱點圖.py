@@ -18,7 +18,7 @@ st.sidebar.info(markdown)
 logo = "https://i.imgur.com/UbOXYAU.png"
 st.sidebar.image(logo)
 
-st.title("水質情況熱點圖")
+st.title("Chemical Substance Heatmaps with Outlier Detection")
 
 # 下載 GeoJSON 資料
 url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/streamlit%E6%B0%B4%E8%B3%AA%E6%83%85%E6%B3%81.geojson"
@@ -30,7 +30,6 @@ organic_compounds = ['NO3_N', 'MI3PO4', 'NO2_N', 'SiO2']
 suspended_solids = ['SS']
 
 # 建立熱點圖函數
-
 def create_heatmap(data, value_columns, title):
     st.subheader(title)
     m = leafmap.Map(center=[23.5, 121], zoom=7)
@@ -56,11 +55,12 @@ def create_heatmap(data, value_columns, title):
 
     m.to_streamlit(height=500)
 
+    # 在地圖下方顯示屬性資料表和離群值結果
     col1, col2 = st.columns([2, 1])
 
     with col1:
         st.write(f"Attribute Table for {title}")
-        st.dataframe(data["STATION_NAME", "LAT", "LON"] + value_columns)
+        st.dataframe(data[["STATION_NAME", "LAT", "LON"] + value_columns])
 
     with col2:
         st.write(f"Outlier Detection for {title}")
