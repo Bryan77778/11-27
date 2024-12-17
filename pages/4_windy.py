@@ -52,6 +52,6 @@ if click_info and click_info["last_clicked"]:
     clicked_lon = click_info["last_clicked"]["lng"]
     st.session_state["windy_lat"] = clicked_lat
     st.session_state["windy_lon"] = clicked_lon
-    st.session_state["windy_zoom"] = 5
+    st.session_state["windy_zoom"] = 30
     st.rerun()  # 使用 st.rerun() 取代 st.experimental_rerun()
 
