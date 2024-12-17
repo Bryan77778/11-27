@@ -4,3 +4,4 @@ leafmap
 owslib
 streamlit
 streamlit-folium
+streamlit>=1.25.0
