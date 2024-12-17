@@ -29,7 +29,7 @@ with col1:
     st.write("### 左側：Windy 動態風速")
     windy_url = f"""
     <iframe 
-        width="100%" 
+        width="200%" 
         height="500" 
         src="https://embed.windy.com/embed2.html?lat={st.session_state['windy_lat']}&lon={st.session_state['windy_lon']}&zoom={st.session_state['windy_zoom']}&level=surface&overlay=wind&menu=&message=&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&detailLat={st.session_state['windy_lat']}&detailLon={st.session_state['windy_lon']}&metricWind=default&metricTemp=default&radarRange=-1&key={WINDY_API_KEY}" 
         frameborder="0">
