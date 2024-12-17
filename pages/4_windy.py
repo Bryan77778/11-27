@@ -33,23 +33,3 @@ with row1_col2:
     m.add_geojson(water_quality_stations_url, layer_name="水質測站點位")
     m.to_streamlit(height=500)
 
-# 右側地圖 - 整合 Windy API + 水質測站
-with row1_col2:
-    st.write("#### 右側地圖：Windy 風場圖與水質測站點位")
-    
-    # 創建 Leafmap 地圖
-    m2 = leafmap.Map(center=[23.5, 121], zoom=7)
-    
-    # 加入 Windy 風場瓦片圖層
-    windy_tile_layer = "https://tiles.windy.com/tiles/v10.0/dark/256/{z}/{x}/{y}.png"
-    m2.add_tile_layer(
-        windy_tile_layer,
-        name="Windy Wind Layer",
-        attribution="© Windy.com"
-    )
-    
-    # 加入水質測站點位 (GeoJSON)
-    m2.add_geojson(water_quality_stations_url, layer_name="Water Quality Stations")
-    
-    # 顯示地圖
-    m2.to_streamlit(height=500)
