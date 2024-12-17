@@ -14,7 +14,9 @@ st.title("互動地圖展示：點擊水質測站以更新 Windy 圖台")
 # 1. 初始化 Windy 地圖中心點位置
 if "windy_lat" not in st.session_state:
     st.session_state["windy_lat"] = 23.5  # 初始緯度
+if "windy_lon" not in st.session_state:
     st.session_state["windy_lon"] = 121   # 初始經度
+if "windy_zoom" not in st.session_state:
     st.session_state["windy_zoom"] = 10   # 初始縮放級別
 
 # 2. 使用 Columns 進行左右分割顯示
@@ -36,7 +38,7 @@ with col1:
 # 4. 右側地圖：水質測站點位 (互動)
 with col2:
     st.write("#### 右側地圖：水質測站點位")
-    m = leafmap.Map(center=[23.5, 121], zoom=7)
+    m = leafmap.Map(center=[st.session_state["windy_lat"], st.session_state["windy_lon"]], zoom=7)
     m.add_basemap("OpenStreetMap")
     m.add_geojson(water_quality_stations_url, layer_name="水質測站點位")
 
