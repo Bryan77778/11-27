@@ -22,4 +22,3 @@ windy_embed_code = f"""
 
 # 使用 Streamlit 顯示地圖
 st.components.v1.html(windy_embed_code, height=600)
-    st.error(f"發生錯誤: {e}")
