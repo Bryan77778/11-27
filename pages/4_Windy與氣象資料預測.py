@@ -86,10 +86,9 @@ st.title("潮汐資料處理")
 
 # 從 GitHub 下載潮汐 JSON 資料
 try:
-    # 發送請求下載 JSON 資料
     response = requests.get(tide_url)
-    response.raise_for_status()  # 確保回應成功
-    tide_data = response.json()  # 解析為 JSON 格式
+    response.raise_for_status()  # 如果 HTTP 狀態碼不是 200，則拋出例外
+    tide_data = response.json()  # 將回應內容解析為 JSON 格式
 
     # 提取潮汐預報資料
     tide_forecasts = tide_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
@@ -117,7 +116,7 @@ try:
                 }
                 table_data.append(tide_time_data)
 
-    # 顯示資料
+    # 顯示資料於 Streamlit
     if table_data:
         df = pd.DataFrame(table_data)
         st.write("### 潮汐預報資料")
@@ -126,10 +125,10 @@ try:
         st.warning("無潮汐預報資料可供顯示。")
 
 except requests.exceptions.RequestException as e:
-    st.error(f"無法從 GitHub 取得潮汐資料: {e}")
+    st.error(f"無法下載潮汐資料: {e}")
 except KeyError as e:
     st.error(f"JSON 資料格式有誤，缺少必要的欄位: {e}")
 except json.JSONDecodeError as e:
     st.error(f"JSON 資料解析失敗: {e}")
 except Exception as e:
-    st.error(f"無法處理潮汐資料: {e}")
+    st.error(f"無法處理潮汐預報資料: {e}")
