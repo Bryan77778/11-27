@@ -12,7 +12,7 @@ water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads
 weather_forecast_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E8%B1%A1%E8%B3%87%E6%96%99%E9%A0%90%E5%A0%B1.json"
 
 # Streamlit 應用標題
-st.title("互動地圖展示與屬性資料表")
+st.title("Windy與氣象資料預測")
 
 # 設定地圖的初始中心位置與縮放級別
 initial_lat, initial_lon = 23.5, 121  # 台灣中間位置
