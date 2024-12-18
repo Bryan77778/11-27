@@ -83,11 +83,11 @@ except Exception as e:
     st.error(f"無法載入或解析 JSON 資料: {e}")
 
 try:
+    # 假設 `weather_forecast_url` 是一個有效的 URL，會讀取這個 JSON 資料
     weather_data = pd.read_json(weather_forecast_url)
-    location_data = weather_data["cwaopendata"]["dataset"]["location"]
-
-    # 修正：將 json_data 替換為 weather_data
-    tide_forecasts = weather_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
+    
+    # 提取潮汐預報資料
+    tide_forecasts = weather_data["Data"]["TideForecasts"]
 
     # 組織資料表
     table_data = []
