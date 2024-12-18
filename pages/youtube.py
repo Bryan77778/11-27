@@ -48,7 +48,7 @@ points = [
     {"name": "宜蘭石城漁港", "coords": [24.979793, 121.950841], "youtube_url": "https://www.youtube.com/watch?v=X76Dkt_fPG0&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=219"},
     {"name": "新北中角海濱", "coords": [25.241362, 121.633588], "youtube_url": "https://www.youtube.com/watch?v=5FCHZP2GMog&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=221"},
     {"name": "基隆潮境海灣", "coords": [25.143973, 121.803787], "youtube_url": "https://www.youtube.com/watch?v=jzAxB157yb8&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=222"},
-    {"name": "基隆外木山漁港", "coords": [25.159178, 121.734041], "https://www.youtube.com/watch?v=LInNQYAbAwQ&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=224"},
+    {"name": "基隆外木山漁港", "coords": [25.159178, 121.734041], "youtube_url": "https://www.youtube.com/watch?v=LInNQYAbAwQ&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=224"},
     {"name": "屏東佳樂水", "coords": [21.994685, 120.865195], "youtube_url": "https://www.youtube.com/watch?v=KBz0yn-F_SY&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=225"},
     {"name": "屏東海生館", "coords": [22.045920, 120.695635], "youtube_url": "https://www.youtube.com/watch?v=L0NX2-8_J48&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=227"},
     {"name": "宜蘭蘇澳無尾港", "coords": [24.615391, 121.859491], "youtube_url": "https://www.youtube.com/watch?v=gPeJuFuNcRc&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=228"},
