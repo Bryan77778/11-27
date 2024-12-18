@@ -41,7 +41,7 @@ points = [
     {"name": "東引遊客中心外平台", "coords": [26.364045, 120.483597], "youtube_url": "https://www.youtube.com/watch?v=5Hc_6uiokds&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=177"},
     {"name": "南竿鐵堡", "coords": [26.141958, 119.920947], "youtube_url": "https://www.youtube.com/watch?v=NVf3j-5I1Fk&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=179"},
     {"name": "花蓮南濱", "coords": [23.961864, 121.607661], "youtube_url": "https://www.youtube.com/watch?v=OQnwVN5lzsk&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=188"},
-    {"name": "嘉義布袋港", "coords": [23.378488, 120.138065], "https://www.youtube.com/watch?v=TCfXAzeeGik&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=212"},
+    {"name": "嘉義布袋港", "coords": [23.378488, 120.138065], "youtube_url": "https://www.youtube.com/watch?v=TCfXAzeeGik&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=212"},
     {"name": "新北萬里港", "coords": [25.181092, 121.697284], "youtube_url": "https://www.youtube.com/watch?v=Shp8KdJK9-Y&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=214"},
     {"name": "屏東後壁湖", "coords": [21.944897, 120.744585], "youtube_url": "https://www.youtube.com/watch?v=yDxCT1q9CrE&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=215"},
     {"name": "屏東合界海岸", "coords": [21.955620, 120.712336], "youtube_url": "https://www.youtube.com/watch?v=TtRGpQGrkqo&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=217"},
