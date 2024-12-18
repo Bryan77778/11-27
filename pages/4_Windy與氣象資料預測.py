@@ -3,6 +3,7 @@ import pandas as pd
 import json
 import leafmap.foliumap as leafmap
 from streamlit_folium import st_folium
+import requests
 
 # 固定 Windy API Key
 WINDY_API_KEY = "Q2V4GyCCzdkfMxBXqrplP2UbxXLjBrEn"
