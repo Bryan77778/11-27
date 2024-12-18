@@ -14,10 +14,10 @@ st.markdown("""
 # 定義多個點的數據
 points = [
     {"name": "台江國家公園", "coords": [23.0024, 120.1399], "youtube_url": "https://www.youtube.com/watch?v=FES0gWTFUHQ&list=PLDm4hXBol5DE9QmiOdgyzYmS2jRzenhUv&index=8"}
-    
+]
 
 # 創建地圖
-m = leafmap.Map(center=(24.9, 121.5), zoom=10)
+m = leafmap.Map(center=(23.5, 120.5), zoom=10)
 
 # 添加點標記到地圖
 for point in points:
@@ -30,6 +30,10 @@ for point in points:
 # 使用 Streamlit 顯示地圖
 st.markdown("### 地圖")
 m.to_streamlit(height=600)
+
+# 顯示數據表格
+st.markdown("### 點座標與 YouTube 連結")
+st.dataframe(points)
 
 # 顯示數據表格
 st.markdown("### 點座標與 YouTube 連結")
