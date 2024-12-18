@@ -8,8 +8,9 @@ from streamlit_folium import st_folium
 WINDY_API_KEY = "Q2V4GyCCzdkfMxBXqrplP2UbxXLjBrEn"
 water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
 
-# 天氣預報 JSON URL
+# 天氣與潮汐預報 JSON URL
 weather_forecast_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E8%B1%A1%E8%B3%87%E6%96%99%E9%A0%90%E5%A0%B1.json"
+tide_forecast_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%BD%AE%E6%B1%90%E9%A0%90%E5%A0%B1-%E6%9C%AA%E4%BE%861%E5%80%8B%E6%9C%88%E6%BD%AE%E6%B1%90%E9%A0%90%E5%A0%B1.json"
 
 # Streamlit 應用標題
 st.title("Windy與氣象資料預測")
@@ -54,21 +55,22 @@ if click_info and click_info.get("last_clicked"):
     st.session_state["windy_zoom"] = 12
     st.experimental_rerun()
 
-# 下方：屬性資料表
+# 下方：氣象與潮汐預報
 st.write("### 台灣周遭海域海象預測(6hr)")
 
-# 解析 JSON 資料
+# 解析天氣與潮汐預報 JSON 資料
 try:
+    # 天氣預報處理
     weather_data = pd.read_json(weather_forecast_url)
     location_data = weather_data["cwaopendata"]["dataset"]["location"]
 
-    # 組織資料表
-    table_data = []
+    # 天氣資料表
+    weather_table = []
     for location in location_data:
         loc_name = location["locationName"]
         for element in location["weatherElement"]:
             for time_data in element["time"]:
-                table_data.append({
+                weather_table.append({
                     "地點": loc_name,
                     "要素": element["elementName"],
                     "起始時間": time_data["startTime"],
@@ -76,8 +78,30 @@ try:
                     "描述": time_data["parameter"]["parameterName"],
                     "數值": time_data["parameter"].get("parameterValue", "N/A")
                 })
-    df = pd.DataFrame(table_data)
-    st.dataframe(df)
+    weather_df = pd.DataFrame(weather_table)
+    st.dataframe(weather_df)
+
+    # 潮汐預報處理
+    tide_data = pd.read_json(tide_forecast_url)
+    tide_forecasts = tide_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
+
+    # 潮汐資料表
+    tide_table = []
+    for forecast in tide_forecasts:
+        loc_name = forecast["Location"]["LocationName"]
+        daily_data = forecast["Location"]["TimePeriods"]["Daily"]
+        for day in daily_data:
+            for tide in day["Time"]:
+                tide_table.append({
+                    "地點": loc_name,
+                    "日期": day["Date"],
+                    "潮汐": tide["Tide"],
+                    "潮高 (AboveTWVD)": tide["TideHeights"]["AboveTWVD"],
+                    "時間": tide["DateTime"]
+                })
+    tide_df = pd.DataFrame(tide_table)
+    st.write("### 潮汐預報")
+    st.dataframe(tide_df)
 
 except Exception as e:
     st.error(f"無法載入或解析 JSON 資料: {e}")
