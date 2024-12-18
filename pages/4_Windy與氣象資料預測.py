@@ -61,7 +61,7 @@ try:
     weather_data = pd.read_json(weather_forecast_url)
     location_data = weather_data["cwaopendata"]["dataset"]["location"]
 
-tide_forecasts = json_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
+    tide_forecasts = json_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
 
     # 組織資料表
     table_data = []
