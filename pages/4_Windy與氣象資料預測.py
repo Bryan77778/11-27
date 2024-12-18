@@ -81,54 +81,39 @@ except Exception as e:
     st.error(f"無法載入或解析 JSON 資料: {e}")
 
 try:
-    # 假設 tide 變數包含從資料來源獲得的 JSON 資料
-    tide_data = tide  # 這裡的 tide 是外部資料源提供的資料
+    # 提取潮汐預報資料
+    tide_forecasts = tide_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
 
-    # 輸出資料的類型與內容，確保資料結構正確
-    st.write("讀取的資料類型：", type(tide_data))
-    st.write("資料內容：", tide_data)
+    # 組織資料表
+    table_data = []
+    for forecast in tide_forecasts:
+        location_name = forecast["Location"]["LocationName"]
+        for daily_data in forecast["Location"]["TimePeriods"]["Daily"]:
+            date = daily_data["Date"]
+            lunar_date = daily_data["LunarDate"]
+            tide_range = daily_data["TideRange"]
+            for tide_time in daily_data["Time"]:
+                tide_time_data = {
+                    "地點": location_name,
+                    "日期": date,
+                    "農曆日期": lunar_date,
+                    "潮差": tide_range,
+                    "潮汐": tide_time["Tide"],
+                    "時間": tide_time["DateTime"],
+                    "相對台灣高程系統": tide_time["TideHeights"].get("AboveTWVD"),
+                    "相對當地平均海平面": tide_time["TideHeights"].get("AboveLocalMSL"),
+                    "相對海圖": tide_time["TideHeights"].get("AboveChartDatum"),
+                }
+                table_data.append(tide_time_data)
 
-    # 檢查資料是否為字典，並且檢查 'cwaopendata' 欄位是否存在
-    if isinstance(tide_data, dict):
-        if "cwaopendata" not in tide_data:
-            st.error("JSON 資料格式錯誤，缺少 'cwaopendata' 欄位。")
-        else:
-            # 提取潮汐預報資料
-            tide_forecasts = tide_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
-
-            # 組織資料表
-            table_data = []
-            for forecast in tide_forecasts:
-                location_name = forecast["Location"]["LocationName"]
-                for daily_data in forecast["Location"]["TimePeriods"]["Daily"]:
-                    date = daily_data["Date"]
-                    lunar_date = daily_data["LunarDate"]
-                    tide_range = daily_data["TideRange"]
-                    for tide_time in daily_data["Time"]:
-                        tide_time_data = {
-                            "地點": location_name,
-                            "日期": date,
-                            "農曆日期": lunar_date,
-                            "潮差": tide_range,
-                            "潮汐": tide_time["Tide"],
-                            "時間": tide_time["DateTime"],
-                            "相對台灣高程系統": tide_time["TideHeights"]["AboveTWVD"],
-                            "相對當地平均海平面": tide_time["TideHeights"]["AboveLocalMSL"],
-                            "相對海圖": tide_time["TideHeights"]["AboveChartDatum"],
-                        }
-                        table_data.append(tide_time_data)
-
-            # 將資料轉為 Pandas DataFrame 並顯示於 Streamlit
-            df = pd.DataFrame(table_data)
-            st.write("### 潮汐預報資料")
-            st.dataframe(df)
+    # 將資料轉為 Pandas DataFrame 並顯示於 Streamlit
+    if table_data:
+        df = pd.DataFrame(table_data)
+        st.write("### 潮汐預報資料")
+        st.dataframe(df)
     else:
-        st.error("讀取的資料不是有效的 JSON 字典格式。")
-
-except json.JSONDecodeError as e:
-    st.error(f"JSON 資料格式錯誤: {e}")
+        st.warning("無潮汐預報資料可供顯示。")
 except KeyError as e:
     st.error(f"JSON 資料格式有誤，缺少必要的欄位: {e}")
 except Exception as e:
-    st.error(f"無法載入或解析 JSON 資料: {e}")
-    st.error(f"無法載入或解析 JSON 資料: {e}")
+    st.error(f"無法處理潮汐預報資料: {e}")
