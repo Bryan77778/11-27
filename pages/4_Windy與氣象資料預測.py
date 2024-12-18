@@ -82,35 +82,48 @@ except Exception as e:
     st.error(f"無法載入或解析 JSON 資料: {e}")
 
 try:
+    # 讀取 JSON 資料
     weather_data = pd.read_json(month_tide)
-    tide_forecasts = weather_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
+
+    # 安全取得潮汐預報資料
+    tide_forecasts = weather_data.get("cwaopendata", {}).get("Resources", {}).get("Resource", {}).get("Data", {}).get("TideForecasts", [])
 
     # 組織資料表
     table_data = []
     for forecast in tide_forecasts:
-        location_name = forecast["Location"]["LocationName"]
-        for daily_data in forecast["Location"]["TimePeriods"]["Daily"]:
-            date = daily_data["Date"]
-            lunar_date = daily_data["LunarDate"]
-            tide_range = daily_data["TideRange"]
-            for tide_time in daily_data["Time"]:
+        location_name = forecast.get("Location", {}).get("LocationName", "未知地點")
+        daily_data_list = forecast.get("Location", {}).get("TimePeriods", {}).get("Daily", [])
+
+        for daily_data in daily_data_list:
+            date = daily_data.get("Date", "未知日期")
+            lunar_date = daily_data.get("LunarDate", "未知農曆日期")
+            tide_range = daily_data.get("TideRange", "未知潮差")
+
+            for tide_time in daily_data.get("Time", []):
                 tide_time_data = {
                     "地點": location_name,
                     "日期": date,
                     "農曆日期": lunar_date,
                     "潮差": tide_range,
-                    "潮汐": tide_time["Tide"],
-                    "時間": tide_time["DateTime"],
-                    "相對台灣高程系統": tide_time["TideHeights"]["AboveTWVD"],
-                    "相對當地平均海平面": tide_time["TideHeights"]["AboveLocalMSL"],
-                    "相對海圖": tide_time["TideHeights"]["AboveChartDatum"],
+                    "潮汐": tide_time.get("Tide", "未知潮汐"),
+                    "時間": tide_time.get("DateTime", "未知時間"),
+                    "相對台灣高程系統": tide_time.get("TideHeights", {}).get("AboveTWVD", "無數據"),
+                    "相對當地平均海平面": tide_time.get("TideHeights", {}).get("AboveLocalMSL", "無數據"),
+                    "相對海圖": tide_time.get("TideHeights", {}).get("AboveChartDatum", "無數據"),
                 }
                 table_data.append(tide_time_data)
 
     # 將資料轉為 Pandas DataFrame 並顯示於 Streamlit
-    df = pd.DataFrame(table_data)
-    st.write("### 潮汐預報資料")
-    st.dataframe(df)
+    if table_data:
+        df = pd.DataFrame(table_data)
+        st.write("### 潮汐預報資料")
+        st.dataframe(df)
+    else:
+        st.warning("沒有找到有效的潮汐預報資料。")
 
+except ValueError as e:
+    st.error(f"JSON 資料格式錯誤: {e}")
+except KeyError as e:
+    st.error(f"資料中缺少必要的欄位: {e}")
 except Exception as e:
-    st.error(f"無法載入或解析 JSON 資料: {e}")
+    st.error(f"發生錯誤: {e}")
