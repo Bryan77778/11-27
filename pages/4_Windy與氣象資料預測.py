@@ -8,7 +8,6 @@ from streamlit_folium import st_folium
 WINDY_API_KEY = "Q2V4GyCCzdkfMxBXqrplP2UbxXLjBrEn"
 water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
 weather_forecast_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E8%B1%A1%E8%B3%87%E6%96%99%E9%A0%90%E5%A0%B1.json"
-tide="https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%BD%AE%E6%B1%90%E9%A0%90%E5%A0%B1-%E6%9C%AA%E4%BE%861%E5%80%8B%E6%9C%88%E6%BD%AE%E6%B1%90%E9%A0%90%E5%A0%B1.json"
 # Streamlit 應用標題
 st.title("Windy與氣象資料預測")
 
@@ -80,10 +79,16 @@ try:
 except Exception as e:
     st.error(f"無法載入或解析 JSON 資料: {e}")
 
+tide_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%BD%AE%E6%B1%90%E9%A0%90%E5%A0%B1-%E6%9C%AA%E4%BE%861%E5%80%8B%E6%9C%88%E6%BD%AE%E6%B1%90%E9%A0%90%E5%A0%B1.json"
+
+st.title("潮汐資料處理")
+
+# 從 GitHub 下載潮汐 JSON 資料
 try:
-    # 確保 tide_data 是字典格式
-    if isinstance(tide, str):
-        tide_data = json.loads(tide)  # 將字串解析為字典
+    # 發送請求下載 JSON 資料
+    response = requests.get(tide_url)
+    response.raise_for_status()  # 確保回應成功
+    tide_data = response.json()  # 解析為 JSON 格式
 
     # 提取潮汐預報資料
     tide_forecasts = tide_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
@@ -119,9 +124,11 @@ try:
     else:
         st.warning("無潮汐預報資料可供顯示。")
 
+except requests.exceptions.RequestException as e:
+    st.error(f"無法從 GitHub 取得潮汐資料: {e}")
 except KeyError as e:
     st.error(f"JSON 資料格式有誤，缺少必要的欄位: {e}")
 except json.JSONDecodeError as e:
     st.error(f"JSON 資料解析失敗: {e}")
 except Exception as e:
-    st.error(f"無法處理潮汐預報資料: {e}")
+    st.error(f"無法處理潮汐資料: {e}")
