@@ -55,7 +55,7 @@ if click_info and click_info.get("last_clicked"):
     st.experimental_rerun()
 
 # 下方：屬性資料表
-st.write("### 海象預測屬性資料表")
+st.write("### 台灣周遭海域海象預測")
 
 # 解析 JSON 資料
 try:
