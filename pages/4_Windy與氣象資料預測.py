@@ -82,7 +82,7 @@ except Exception as e:
 
 try:
     # 提取潮汐預報資料
-    tide_forecasts = tide_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
+    tide_forecasts = tide["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
 
     # 組織資料表
     table_data = []
