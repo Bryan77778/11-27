@@ -22,7 +22,7 @@ if "windy_lat" not in st.session_state:
     st.session_state["windy_zoom"] = zoom_level
 
 # 左側：Windy 動態風速圖
-st.write("### 左側：Windy 動態風速")
+st.write("### Windy 動態風速")
 windy_url = f"""
 <iframe 
     width="100%" 
@@ -34,7 +34,7 @@ windy_url = f"""
 st.components.v1.html(windy_url, height=500)
 
 # 右側：水質測站點位地圖
-st.write("### 右側：水質測站點位")
+st.write("### 水質測站點位")
 m = leafmap.Map(center=[st.session_state["windy_lat"], st.session_state["windy_lon"]], zoom=zoom_level)
 m.add_basemap("OpenStreetMap")
 m.add_geojson(water_quality_stations_url, layer_name="水質測站點位")
