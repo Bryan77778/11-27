@@ -1,20 +1,18 @@
 import streamlit as st
+import pandas as pd
+import json
 import leafmap.foliumap as leafmap
 from streamlit_folium import st_folium
-import pandas as pd
-import requests
 
 # 固定 Windy API Key
 WINDY_API_KEY = "Q2V4GyCCzdkfMxBXqrplP2UbxXLjBrEn"
-
-# GeoJSON 資料 URL
 water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
 
-# 氣象預報資料 JSON URL
-forecast_data_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E8%B1%A1%E8%B3%87%E6%96%99%E9%A0%90%E5%A0%B1.json"
+# 天氣預報 JSON URL
+weather_forecast_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E8%B1%A1%E8%B3%87%E6%96%99%E9%A0%90%E5%A0%B1.json"
 
 # Streamlit 應用標題
-st.title("互動地圖展示：點擊水質測站以更新 Windy 圖台")
+st.title("互動地圖展示與屬性資料表")
 
 # 設定地圖的初始中心位置與縮放級別
 initial_lat, initial_lon = 23.5, 121  # 台灣中間位置
@@ -54,21 +52,32 @@ if click_info and click_info.get("last_clicked"):
     st.session_state["windy_lat"] = clicked_lat
     st.session_state["windy_lon"] = clicked_lon
     st.session_state["windy_zoom"] = 12
-    st.rerun()
+    st.experimental_rerun()
 
-# 顯示屬性資料表
-st.write("### 氣象預報屬性資料表")
+# 下方：屬性資料表
+st.write("### 海象預測屬性資料表")
 
+# 解析 JSON 資料
 try:
-    # 載入 JSON 資料並轉換為 DataFrame
-    response = requests.get(forecast_data_url)
-    response.raise_for_status()  # 檢查是否成功
-    forecast_data = response.json()
+    weather_data = pd.read_json(weather_forecast_url)
+    location_data = weather_data["cwaopendata"]["dataset"]["location"]
 
-    # 將 JSON 資料轉換為表格
-    df = pd.DataFrame(forecast_data)
-    st.dataframe(df, use_container_width=True)
+    # 組織資料表
+    table_data = []
+    for location in location_data:
+        loc_name = location["locationName"]
+        for element in location["weatherElement"]:
+            for time_data in element["time"]:
+                table_data.append({
+                    "地點": loc_name,
+                    "要素": element["elementName"],
+                    "起始時間": time_data["startTime"],
+                    "結束時間": time_data["endTime"],
+                    "描述": time_data["parameter"]["parameterName"],
+                    "數值": time_data["parameter"].get("parameterValue", "N/A")
+                })
+    df = pd.DataFrame(table_data)
+    st.dataframe(df)
 
 except Exception as e:
-    st.error(f"無法載入氣象預報資料：{e}")
-
+    st.error(f"無法載入或解析 JSON 資料: {e}")
