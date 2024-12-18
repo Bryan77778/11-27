@@ -7,8 +7,7 @@ from streamlit_folium import st_folium
 # 固定 Windy API Key
 WINDY_API_KEY = "Q2V4GyCCzdkfMxBXqrplP2UbxXLjBrEn"
 water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
-
-# 天氣預報 JSON URL
+month_tide="https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%BD%AE%E6%B1%90%E9%A0%90%E5%A0%B1-%E6%9C%AA%E4%BE%861%E5%80%8B%E6%9C%88%E6%BD%AE%E6%B1%90%E9%A0%90%E5%A0%B1.json"
 weather_forecast_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E8%B1%A1%E8%B3%87%E6%96%99%E9%A0%90%E5%A0%B1.json"
 
 # Streamlit 應用標題
@@ -83,7 +82,7 @@ except Exception as e:
     st.error(f"無法載入或解析 JSON 資料: {e}")
 
 try:
-    weather_data = pd.read_json(weather_forecast_url)
+    weather_data = pd.read_json(month_tide)
     tide_forecasts = weather_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
 
     # 組織資料表
