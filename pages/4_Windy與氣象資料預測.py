@@ -82,11 +82,21 @@ except Exception as e:
     st.error(f"無法載入或解析 JSON 資料: {e}")
 
 try:
-    # 讀取 JSON 資料
-    weather_data = pd.read_json(month_tide)
+    # 確保輸入資料為 JSON 格式
+    if isinstance(month_tide, str):
+        weather_data = json.loads(month_tide)  # 使用 json.loads 解析字串
+    else:
+        st.error("輸入的資料不是有效的 JSON 格式。")
+        raise ValueError("無效的 JSON 資料")
 
     # 安全取得潮汐預報資料
-    tide_forecasts = weather_data.get("cwaopendata", {}).get("Resources", {}).get("Resource", {}).get("Data", {}).get("TideForecasts", [])
+    tide_forecasts = (
+        weather_data.get("cwaopendata", {})
+        .get("Resources", {})
+        .get("Resource", {})
+        .get("Data", {})
+        .get("TideForecasts", [])
+    )
 
     # 組織資料表
     table_data = []
@@ -121,7 +131,7 @@ try:
     else:
         st.warning("沒有找到有效的潮汐預報資料。")
 
-except ValueError as e:
+except json.JSONDecodeError as e:
     st.error(f"JSON 資料格式錯誤: {e}")
 except KeyError as e:
     st.error(f"資料中缺少必要的欄位: {e}")
