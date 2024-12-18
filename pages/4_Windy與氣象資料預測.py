@@ -61,7 +61,8 @@ try:
     weather_data = pd.read_json(weather_forecast_url)
     location_data = weather_data["cwaopendata"]["dataset"]["location"]
 
-    tide_forecasts = json_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
+    # 修正：將 json_data 替換為 weather_data
+    tide_forecasts = weather_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
 
     # 組織資料表
     table_data = []
@@ -96,3 +97,4 @@ except KeyError as e:
     st.error(f"JSON 資料格式有誤，缺少必要的欄位: {e}")
 except Exception as e:
     st.error(f"無法載入或解析 JSON 資料: {e}")
+
