@@ -83,10 +83,10 @@ except Exception as e:
 try:
     # 確保 tide_data 是字典
     if isinstance(tide_data, str):
-        tide_data = json.loads(tide_data)  # 將字串解析成字典
+        tide_data = json.loads(tide)  # 將字串解析成字典
     
     # 提取潮汐預報資料
-    tide_forecasts = tide_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
+    tide_forecasts = tide["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
 
     # 組織資料表
     table_data = []
