@@ -81,14 +81,14 @@ except Exception as e:
     st.error(f"無法載入或解析 JSON 資料: {e}")
 
 try:
-    # 確保 tide_data 是字典
-    if isinstance(tide_data, str):
-        tide_data = json.loads(tide)  # 將字串解析成字典
-    
+    # 確保 tide_data 是字典格式
+    if isinstance(tide, str):
+        tide_data = json.loads(tide)  # 將字串解析為字典
+
     # 提取潮汐預報資料
     tide_forecasts = tide_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
 
-    # 組織資料表
+    # 準備資料表
     table_data = []
     for forecast in tide_forecasts:
         location_name = forecast["Location"]["LocationName"]
@@ -97,6 +97,7 @@ try:
             lunar_date = daily_data["LunarDate"]
             tide_range = daily_data["TideRange"]
             for tide_time in daily_data["Time"]:
+                # 提取潮汐時間與高度資料
                 tide_time_data = {
                     "地點": location_name,
                     "日期": date,
@@ -104,9 +105,9 @@ try:
                     "潮差": tide_range,
                     "潮汐": tide_time["Tide"],
                     "時間": tide_time["DateTime"],
-                    "相對台灣高程系統": tide_time["TideHeights"].get("AboveTWVD"),
-                    "相對當地平均海平面": tide_time["TideHeights"].get("AboveLocalMSL"),
-                    "相對海圖": tide_time["TideHeights"].get("AboveChartDatum"),
+                    "相對台灣高程系統 (cm)": tide_time["TideHeights"].get("AboveTWVD"),
+                    "相對當地平均海平面 (cm)": tide_time["TideHeights"].get("AboveLocalMSL"),
+                    "相對海圖 (cm)": tide_time["TideHeights"].get("AboveChartDatum"),
                 }
                 table_data.append(tide_time_data)
 
@@ -117,6 +118,7 @@ try:
         st.dataframe(df)
     else:
         st.warning("無潮汐預報資料可供顯示。")
+
 except KeyError as e:
     st.error(f"JSON 資料格式有誤，缺少必要的欄位: {e}")
 except json.JSONDecodeError as e:
