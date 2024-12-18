@@ -81,3 +81,37 @@ try:
 
 except Exception as e:
     st.error(f"無法載入或解析 JSON 資料: {e}")
+
+try:
+    weather_data = pd.read_json(weather_forecast_url)
+    tide_forecasts = weather_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
+
+    # 組織資料表
+    table_data = []
+    for forecast in tide_forecasts:
+        location_name = forecast["Location"]["LocationName"]
+        for daily_data in forecast["Location"]["TimePeriods"]["Daily"]:
+            date = daily_data["Date"]
+            lunar_date = daily_data["LunarDate"]
+            tide_range = daily_data["TideRange"]
+            for tide_time in daily_data["Time"]:
+                tide_time_data = {
+                    "地點": location_name,
+                    "日期": date,
+                    "農曆日期": lunar_date,
+                    "潮差": tide_range,
+                    "潮汐": tide_time["Tide"],
+                    "時間": tide_time["DateTime"],
+                    "相對台灣高程系統": tide_time["TideHeights"]["AboveTWVD"],
+                    "相對當地平均海平面": tide_time["TideHeights"]["AboveLocalMSL"],
+                    "相對海圖": tide_time["TideHeights"]["AboveChartDatum"],
+                }
+                table_data.append(tide_time_data)
+
+    # 將資料轉為 Pandas DataFrame 並顯示於 Streamlit
+    df = pd.DataFrame(table_data)
+    st.write("### 潮汐預報資料")
+    st.dataframe(df)
+
+except Exception as e:
+    st.error(f"無法載入或解析 JSON 資料: {e}")
