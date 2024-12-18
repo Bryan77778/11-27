@@ -81,8 +81,12 @@ except Exception as e:
     st.error(f"無法載入或解析 JSON 資料: {e}")
 
 try:
+    # 確保 tide_data 是字典
+    if isinstance(tide_data, str):
+        tide_data = json.loads(tide_data)  # 將字串解析成字典
+    
     # 提取潮汐預報資料
-    tide_forecasts = tide["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
+    tide_forecasts = tide_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
 
     # 組織資料表
     table_data = []
@@ -106,7 +110,7 @@ try:
                 }
                 table_data.append(tide_time_data)
 
-    # 將資料轉為 Pandas DataFrame 並顯示於 Streamlit
+    # 顯示資料
     if table_data:
         df = pd.DataFrame(table_data)
         st.write("### 潮汐預報資料")
@@ -115,5 +119,7 @@ try:
         st.warning("無潮汐預報資料可供顯示。")
 except KeyError as e:
     st.error(f"JSON 資料格式有誤，缺少必要的欄位: {e}")
+except json.JSONDecodeError as e:
+    st.error(f"JSON 資料解析失敗: {e}")
 except Exception as e:
     st.error(f"無法處理潮汐預報資料: {e}")
