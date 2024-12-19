@@ -90,25 +90,18 @@ try:
     response.raise_for_status()
     tide_data = response.json()
 
-    # 檢查資料結構
+    # 提取資料結構
     resources = tide_data.get("cwaopendata", {}).get("Resources", {})
     resource_data = resources.get("Resource", {})
-    if isinstance(resource_data, str):
-        resource_data = json.loads(resource_data)  # 若 Resource 是字串，嘗試轉換
+    tide_forecasts = resource_data.get("Data", {}).get("TideForecasts", [])
 
-    if not isinstance(resource_data, dict):
-        st.error("Resource 資料結構異常，無法處理。")
+    # 確認資料型別
+    if not isinstance(tide_forecasts, list):
+        st.error("TideForecasts 資料結構異常，請檢查來源。")
     else:
-        # 解析 TideForecasts
-        tide_forecasts_str = resource_data.get("Data", {}).get("TideForecasts", "")
-        if isinstance(tide_forecasts_str, str):
-            tide_forecasts = json.loads(tide_forecasts_str)  # 將字串解析為字典
-        else:
-            st.error("TideForecasts 資料結構異常，請檢查來源。")
-
-        # 開始解析潮汐資料
+        # 解析潮汐資料
         table_data = []
-        for location_id, forecast in tide_forecasts.items():  # 假設是鍵值對形式
+        for forecast in tide_forecasts:
             location = forecast.get("Location", {})
             loc_name = location.get("LocationName", "未知地點")
             latitude = location.get("Latitude", "未知緯度")
@@ -147,7 +140,5 @@ try:
 
 except requests.exceptions.RequestException as e:
     st.error(f"無法下載潮汐資料: {e}")
-except json.JSONDecodeError as e:
-    st.error(f"JSON 解析錯誤: {e}")
 except Exception as e:
     st.error(f"無法處理潮汐資料: {e}")
