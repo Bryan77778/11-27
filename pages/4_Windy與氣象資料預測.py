@@ -116,7 +116,6 @@ try:
             # 確認 Location 是字典
             location = forecast.get("Location", {})
             if not isinstance(location, dict):
-                st.warning(f"無效的 Location 資料: {location}")
                 continue
 
             loc_name = location.get("LocationName", "未知地點")
