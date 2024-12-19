@@ -148,3 +148,12 @@ except requests.exceptions.RequestException as e:
     st.error(f"無法下載潮汐資料: {e}")
 except Exception as e:
     st.error(f"無法處理潮汐資料: {e}")
+
+print("TideForecasts 的內容:", tide_forecasts)
+print("TideForecasts 的型別:", type(tide_forecasts))
+if isinstance(tide_forecasts, str):
+    try:
+        tide_forecasts = json.loads(tide_forecasts)  # 轉換為 JSON 結構
+    except json.JSONDecodeError as e:
+        st.error(f"TideForecasts 資料無法解析為 JSON 格式: {e}")
+        tide_forecasts = None  # 解析失敗則設定為 None
