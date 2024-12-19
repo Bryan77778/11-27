@@ -87,47 +87,47 @@ st.title("潮汐資料處理")
 # 從 GitHub 下載潮汐 JSON 資料
 try:
     response = requests.get(tide_url)
-    response.raise_for_status()  # 如果 HTTP 狀態碼不是 200，則拋出例外
-    tide_data = response.json()  # 將回應內容解析為 JSON 格式
+    response.raise_for_status()
+    tide_data = response.json()
 
-    # 提取潮汐預報資料
-    tide_forecasts = tide_data["cwaopendata"]["Resources"]["Resource"]["Data"]["TideForecasts"]
+    # 檢查資料結構
+    st.json(tide_data)  # 暫時顯示完整 JSON 結構
 
-    # 準備資料表
-    table_data = []
-    for forecast in tide_forecasts:
-        location_name = forecast["Location"]["LocationName"]
-        for daily_data in forecast["Location"]["TimePeriods"]["Daily"]:
-            date = daily_data["Date"]
-            lunar_date = daily_data["LunarDate"]
-            tide_range = daily_data["TideRange"]
-            for tide_time in daily_data["Time"]:
-                # 提取潮汐時間與高度資料
-                tide_time_data = {
-                    "地點": location_name,
-                    "日期": date,
-                    "農曆日期": lunar_date,
-                    "潮差": tide_range,
-                    "潮汐": tide_time["Tide"],
-                    "時間": tide_time["DateTime"],
-                    "相對台灣高程系統 (cm)": tide_time["TideHeights"].get("AboveTWVD"),
-                    "相對當地平均海平面 (cm)": tide_time["TideHeights"].get("AboveLocalMSL"),
-                    "相對海圖 (cm)": tide_time["TideHeights"].get("AboveChartDatum"),
-                }
-                table_data.append(tide_time_data)
+    tide_forecasts = tide_data.get("cwaopendata", {}).get("Resources", {}).get("Resource", {}).get("Data", {}).get("TideForecasts", [])
 
-    # 顯示資料於 Streamlit
-    if table_data:
-        df = pd.DataFrame(table_data)
-        st.write("### 潮汐預報資料")
-        st.dataframe(df)
-    else:
+    if not tide_forecasts:
         st.warning("無潮汐預報資料可供顯示。")
+    else:
+        table_data = []
+        for forecast in tide_forecasts:
+            location_name = forecast.get("Location", {}).get("LocationName", "未知地點")
+            for daily_data in forecast.get("Location", {}).get("TimePeriods", {}).get("Daily", []):
+                date = daily_data.get("Date", "未知日期")
+                lunar_date = daily_data.get("LunarDate", "未知農曆日期")
+                tide_range = daily_data.get("TideRange", "未知潮差")
+                for tide_time in daily_data.get("Time", []):
+                    tide_time_data = {
+                        "地點": location_name,
+                        "日期": date,
+                        "農曆日期": lunar_date,
+                        "潮差": tide_range,
+                        "潮汐": tide_time.get("Tide", "未知"),
+                        "時間": tide_time.get("DateTime", "未知"),
+                        "相對台灣高程系統 (cm)": tide_time.get("TideHeights", {}).get("AboveTWVD"),
+                        "相對當地平均海平面 (cm)": tide_time.get("TideHeights", {}).get("AboveLocalMSL"),
+                        "相對海圖 (cm)": tide_time.get("TideHeights", {}).get("AboveChartDatum"),
+                    }
+                    table_data.append(tide_time_data)
+
+        if table_data:
+            df = pd.DataFrame(table_data)
+            st.write("### 潮汐預報資料")
+            st.dataframe(df)
+        else:
+            st.warning("無潮汐預報資料可供顯示。")
 
 except requests.exceptions.RequestException as e:
     st.error(f"無法下載潮汐資料: {e}")
-except KeyError as e:
-    st.error(f"JSON 資料格式有誤，缺少必要的欄位: {e}")
 except json.JSONDecodeError as e:
     st.error(f"JSON 資料解析失敗: {e}")
 except Exception as e:
