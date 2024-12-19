@@ -97,16 +97,14 @@ try:
 
     # 檢查資料型別
     if isinstance(tide_forecasts, str):
-        # 如果是字串，嘗試解析為列表或字典
         try:
             tide_forecasts = json.loads(tide_forecasts)
         except json.JSONDecodeError:
-            st.error("TideForecasts 資料格式錯誤，無法解析為 JSON。")
+            st.error("TideForecasts 無法解析為 JSON 格式。")
             tide_forecasts = None
 
-    # 繼續處理資料
+    # 如果 TideForecasts 是列表，繼續處理
     if isinstance(tide_forecasts, list):
-        # 正常處理潮汐資料
         table_data = []
         for forecast in tide_forecasts:
             location = forecast.get("Location", {})
@@ -122,7 +120,6 @@ try:
                 tide_times = daily_data.get("Time", [])
 
                 for tide_time in tide_times:
-                    # 組織每筆潮汐時間資料
                     table_data.append({
                         "地點": loc_name,
                         "緯度": latitude,
