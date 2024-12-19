@@ -90,52 +90,60 @@ try:
     response.raise_for_status()
     tide_data = response.json()
 
-    # 提取潮汐預報資料
-    resources = tide_data.get("cwaopendata", {}).get("Resources", {})
-    resource_data = resources.get("Resource", {}).get("Data", {})
-    tide_forecasts = resource_data.get("TideForecasts", [])
-
-    if not tide_forecasts:
-        st.warning("無潮汐資料可供顯示。")
+    # 檢查資料結構
+    if not isinstance(tide_data, dict):
+        st.error("主要資料結構不是字典格式，請檢查資料來源。")
     else:
-        # 解析資料並組織為表格格式
-        table_data = []
-        for forecast in tide_forecasts:
-            location = forecast.get("Location", {})
-            loc_name = location.get("LocationName", "未知地點")
-            latitude = location.get("Latitude", "未知緯度")
-            longitude = location.get("Longitude", "未知經度")
-            daily_data_list = location.get("TimePeriods", {}).get("Daily", [])
-
-            for daily_data in daily_data_list:
-                date = daily_data.get("Date", "未知日期")
-                lunar_date = daily_data.get("LunarDate", "未知農曆日期")
-                tide_range = daily_data.get("TideRange", "未知潮差")
-                tide_times = daily_data.get("Time", [])
-
-                for tide_time in tide_times:
-                    # 組織每筆潮汐時間資料
-                    table_data.append({
-                        "地點": loc_name,
-                        "緯度": latitude,
-                        "經度": longitude,
-                        "日期": date,
-                        "農曆日期": lunar_date,
-                        "潮差": tide_range,
-                        "潮汐": tide_time.get("Tide", "未知"),
-                        "時間": tide_time.get("DateTime", "未知"),
-                        "相對台灣高程系統 (cm)": tide_time.get("TideHeights", {}).get("AboveTWVD", "N/A"),
-                        "相對當地平均海平面 (cm)": tide_time.get("TideHeights", {}).get("AboveLocalMSL", "N/A"),
-                        "相對海圖 (cm)": tide_time.get("TideHeights", {}).get("AboveChartDatum", "N/A"),
-                    })
-
-        # 建立資料框並顯示
-        df = pd.DataFrame(table_data)
-        if not df.empty:
-            st.write("### 潮汐預報資料")
-            st.dataframe(df)
+        resources = tide_data.get("cwaopendata", {}).get("Resources", {})
+        if not isinstance(resources, dict):
+            st.error("Resources 資料結構異常，請檢查來源。")
         else:
-            st.warning("無潮汐資料可供顯示。")
+            resource_data = resources.get("Resource", {}).get("Data", {})
+            if not isinstance(resource_data, dict):
+                st.error("Resource Data 資料結構異常，請檢查來源。")
+            else:
+                tide_forecasts = resource_data.get("TideForecasts", [])
+                if not isinstance(tide_forecasts, list):
+                    st.error("TideForecasts 資料結構異常，請檢查來源。")
+                else:
+                    # 開始解析潮汐資料
+                    table_data = []
+                    for forecast in tide_forecasts:
+                        location = forecast.get("Location", {})
+                        loc_name = location.get("LocationName", "未知地點")
+                        latitude = location.get("Latitude", "未知緯度")
+                        longitude = location.get("Longitude", "未知經度")
+                        daily_data_list = location.get("TimePeriods", {}).get("Daily", [])
+
+                        for daily_data in daily_data_list:
+                            date = daily_data.get("Date", "未知日期")
+                            lunar_date = daily_data.get("LunarDate", "未知農曆日期")
+                            tide_range = daily_data.get("TideRange", "未知潮差")
+                            tide_times = daily_data.get("Time", [])
+
+                            for tide_time in tide_times:
+                                # 組織每筆潮汐時間資料
+                                table_data.append({
+                                    "地點": loc_name,
+                                    "緯度": latitude,
+                                    "經度": longitude,
+                                    "日期": date,
+                                    "農曆日期": lunar_date,
+                                    "潮差": tide_range,
+                                    "潮汐": tide_time.get("Tide", "未知"),
+                                    "時間": tide_time.get("DateTime", "未知"),
+                                    "相對台灣高程系統 (cm)": tide_time.get("TideHeights", {}).get("AboveTWVD", "N/A"),
+                                    "相對當地平均海平面 (cm)": tide_time.get("TideHeights", {}).get("AboveLocalMSL", "N/A"),
+                                    "相對海圖 (cm)": tide_time.get("TideHeights", {}).get("AboveChartDatum", "N/A"),
+                                })
+
+                    # 建立資料框並顯示
+                    df = pd.DataFrame(table_data)
+                    if not df.empty:
+                        st.write("### 潮汐預報資料")
+                        st.dataframe(df)
+                    else:
+                        st.warning("無潮汐資料可供顯示。")
 
 except requests.exceptions.RequestException as e:
     st.error(f"無法下載潮汐資料: {e}")
@@ -143,4 +151,3 @@ except KeyError as e:
     st.error(f"JSON 資料格式有誤，缺少必要的欄位: {e}")
 except Exception as e:
     st.error(f"無法處理潮汐資料: {e}")
-
