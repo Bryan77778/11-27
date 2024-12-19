@@ -136,7 +136,6 @@ try:
 
                 # 確認 Time 是列表
                 if not isinstance(tide_times, list):
-                    st.warning(f"無效的 Time 資料: {tide_times}")
                     continue
 
                 for tide_time in tide_times:
