@@ -82,8 +82,6 @@ except Exception as e:
 
 tide_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%BD%AE%E6%B1%90%E9%A0%90%E5%A0%B1-%E6%9C%AA%E4%BE%861%E5%80%8B%E6%9C%88%E6%BD%AE%E6%B1%90%E9%A0%90%E5%A0%B1.json"
 
-st.title("潮汐資料處理")
-
 try:
     # 下載資料
     response = requests.get(tide_url)
