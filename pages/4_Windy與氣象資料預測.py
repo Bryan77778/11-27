@@ -96,7 +96,19 @@ try:
     resource_data = resources.get("Resource", {})
     tide_forecasts_raw = resource_data.get("Data", {}).get("TideForecasts", None)
 
-
+    # 如果 TideForecasts 是字串，嘗試解析為 JSON
+    if isinstance(tide_forecasts_raw, str):
+        try:
+            tide_forecasts = json.loads(tide_forecasts_raw)
+        except json.JSONDecodeError:
+            st.error("TideForecasts 是無法解析的字串資料。")
+            tide_forecasts = None
+    elif isinstance(tide_forecasts_raw, list):
+        tide_forecasts = tide_forecasts_raw  # 如果是列表，直接使用
+    else:
+        st.warning("TideForecasts 資料為空或型別未知。")
+        tide_forecasts = None
+    
     # 準備解析資料
     table_data = []
     if tide_forecasts and isinstance(tide_forecasts, list):
