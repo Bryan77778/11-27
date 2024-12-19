@@ -93,13 +93,20 @@ try:
     # 提取資料結構
     resources = tide_data.get("cwaopendata", {}).get("Resources", {})
     resource_data = resources.get("Resource", {})
-    tide_forecasts = resource_data.get("Data", {}).get("TideForecasts", [])
+    tide_forecasts = resource_data.get("Data", {}).get("TideForecasts", None)
 
-    # 確認資料型別
-    if not isinstance(tide_forecasts, list):
-        st.error("TideForecasts 資料結構異常，請檢查來源。")
-    else:
-        # 解析潮汐資料
+    # 檢查資料型別
+    if isinstance(tide_forecasts, str):
+        # 如果是字串，嘗試解析為列表或字典
+        try:
+            tide_forecasts = json.loads(tide_forecasts)
+        except json.JSONDecodeError:
+            st.error("TideForecasts 資料格式錯誤，無法解析為 JSON。")
+            tide_forecasts = None
+
+    # 繼續處理資料
+    if isinstance(tide_forecasts, list):
+        # 正常處理潮汐資料
         table_data = []
         for forecast in tide_forecasts:
             location = forecast.get("Location", {})
@@ -137,6 +144,8 @@ try:
             st.dataframe(df)
         else:
             st.warning("無潮汐資料可供顯示。")
+    else:
+        st.error("TideForecasts 資料結構異常，請檢查來源。")
 
 except requests.exceptions.RequestException as e:
     st.error(f"無法下載潮汐資料: {e}")
