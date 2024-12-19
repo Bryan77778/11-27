@@ -95,15 +95,19 @@ try:
     resource_data = resources.get("Resource", {})
     tide_forecasts = resource_data.get("Data", {}).get("TideForecasts", None)
 
-    # 檢查資料型別
+    # 打印 TideForecasts 資料以進行調試
+    print("TideForecasts 的內容:", tide_forecasts)
+    print("TideForecasts 的型別:", type(tide_forecasts))
+
+    # 如果 TideForecasts 是字串，嘗試解析為 JSON
     if isinstance(tide_forecasts, str):
         try:
-            tide_forecasts = json.loads(tide_forecasts)
-        except json.JSONDecodeError:
-            st.error("TideForecasts 無法解析為 JSON 格式。")
+            tide_forecasts = json.loads(tide_forecasts)  # 轉換為 JSON 結構
+        except json.JSONDecodeError as e:
+            st.error(f"TideForecasts 資料無法解析為 JSON 格式: {e}")
             tide_forecasts = None
 
-    # 如果 TideForecasts 是列表，繼續處理
+    # 繼續處理資料
     if isinstance(tide_forecasts, list):
         table_data = []
         for forecast in tide_forecasts:
@@ -148,12 +152,3 @@ except requests.exceptions.RequestException as e:
     st.error(f"無法下載潮汐資料: {e}")
 except Exception as e:
     st.error(f"無法處理潮汐資料: {e}")
-
-print("TideForecasts 的內容:", tide_forecasts)
-print("TideForecasts 的型別:", type(tide_forecasts))
-if isinstance(tide_forecasts, str):
-    try:
-        tide_forecasts = json.loads(tide_forecasts)  # 轉換為 JSON 結構
-    except json.JSONDecodeError as e:
-        st.error(f"TideForecasts 資料無法解析為 JSON 格式: {e}")
-        tide_forecasts = None  # 解析失敗則設定為 None
