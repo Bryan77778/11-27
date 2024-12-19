@@ -126,7 +126,6 @@ try:
 
             # 確認 Daily 是列表
             if not isinstance(daily_data_list, list):
-                st.warning(f"無效的 Daily 資料: {daily_data_list}")
                 continue
 
             for daily_data in daily_data_list:
