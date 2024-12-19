@@ -84,22 +84,27 @@ tide_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%BD%AE%E6
 
 st.title("潮汐資料處理")
 
-# 從 GitHub 下載潮汐 JSON 資料
 try:
+    # 請求潮汐資料
     response = requests.get(tide_url)
     response.raise_for_status()
     tide_data = response.json()
 
-    # 獲取潮汐資料
-    tide_forecasts = tide_data.get("cwaopendata", {}).get("Resources", {}).get("Resource", {}).get("Data", {}).get("TideForecasts", [])
+    # 提取潮汐預報資料
+    resources = tide_data.get("cwaopendata", {}).get("Resources", {})
+    resource_data = resources.get("Resource", {}).get("Data", {})
+    tide_forecasts = resource_data.get("TideForecasts", [])
+
     if not tide_forecasts:
         st.warning("無潮汐資料可供顯示。")
     else:
-        # 準備資料表
+        # 解析資料並組織為表格格式
         table_data = []
         for forecast in tide_forecasts:
             location = forecast.get("Location", {})
             loc_name = location.get("LocationName", "未知地點")
+            latitude = location.get("Latitude", "未知緯度")
+            longitude = location.get("Longitude", "未知經度")
             daily_data_list = location.get("TimePeriods", {}).get("Daily", [])
 
             for daily_data in daily_data_list:
@@ -109,8 +114,11 @@ try:
                 tide_times = daily_data.get("Time", [])
 
                 for tide_time in tide_times:
+                    # 組織每筆潮汐時間資料
                     table_data.append({
                         "地點": loc_name,
+                        "緯度": latitude,
+                        "經度": longitude,
                         "日期": date,
                         "農曆日期": lunar_date,
                         "潮差": tide_range,
@@ -127,11 +135,12 @@ try:
             st.write("### 潮汐預報資料")
             st.dataframe(df)
         else:
-            st.warning("無資料顯示。")
+            st.warning("無潮汐資料可供顯示。")
 
 except requests.exceptions.RequestException as e:
     st.error(f"無法下載潮汐資料: {e}")
-except json.JSONDecodeError as e:
-    st.error(f"JSON 資料解析失敗: {e}")
+except KeyError as e:
+    st.error(f"JSON 資料格式有誤，缺少必要的欄位: {e}")
 except Exception as e:
     st.error(f"無法處理潮汐資料: {e}")
+
