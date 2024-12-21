@@ -41,22 +41,12 @@ if fishing_spots_gdf is not None:
 if county_gdf is not None:
     county_gdf = county_gdf.to_crs("EPSG:4326")
 
-# 動態檢查並設定欄位名稱
-def assign_county_column(gdf, default_column_name):
-    """檢查是否存在適合的縣市欄位，若無則回傳預設值"""
-    candidate_columns = ["county", "Location", "area_name"]
-    for col in candidate_columns:
-        if col in gdf.columns:
-            return col
-    return default_column_name
+# 將 Location 欄位改名為 county
+if water_quality_stations_gdf is not None and "Location" in water_quality_stations_gdf.columns:
+    water_quality_stations_gdf.rename(columns={"Location": "county"}, inplace=True)
 
-if water_quality_stations_gdf is not None:
-    water_quality_column = assign_county_column(water_quality_stations_gdf, "county")
-    water_quality_stations_gdf["county"] = water_quality_stations_gdf[water_quality_column]
-
-if fishing_spots_gdf is not None:
-    fishing_spots_column = assign_county_column(fishing_spots_gdf, "county")
-    fishing_spots_gdf["county"] = fishing_spots_gdf[fishing_spots_column]
+if fishing_spots_gdf is not None and "county" not in fishing_spots_gdf.columns:
+    fishing_spots_gdf["county"] = fishing_spots_gdf["county"]  # 確保有 county 欄位
 
 # 計算點位數量並合併到縣市圖層
 if county_gdf is not None:
