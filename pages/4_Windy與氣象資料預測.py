@@ -160,7 +160,7 @@ try:
         # 顯示資料
         if table_data:
             df = pd.DataFrame(table_data)
-            st.write("### 潮汐預報資料")
+            st.write("### 潮汐預報資料（近一個月）")
             st.dataframe(df)
         else:
             st.warning("無潮汐資料可供顯示。")
