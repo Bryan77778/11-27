@@ -45,8 +45,10 @@ if county_gdf is not None:
 if water_quality_stations_gdf is not None and "Location" in water_quality_stations_gdf.columns:
     water_quality_stations_gdf.rename(columns={"Location": "county"}, inplace=True)
 
-if fishing_spots_gdf is not None and "county" not in fishing_spots_gdf.columns:
-    fishing_spots_gdf["county"] = fishing_spots_gdf["county"]  # 確保有 county 欄位
+# 確保 fishing_spots_gdf 的 "COUNTY" 欄位改名為 "county"
+if fishing_spots_gdf is not None:
+    if "COUNTY" in fishing_spots_gdf.columns:
+        fishing_spots_gdf.rename(columns={"COUNTY": "county"}, inplace=True)
 
 # 計算點位數量並合併到縣市圖層
 if county_gdf is not None:
@@ -80,7 +82,7 @@ if county_gdf is not None:
     water_quality_layer = pdk.Layer(
         "ColumnLayer",
         data=county_gdf,
-        get_position="[geometry.x, geometry.y]",
+        get_position="[geometry.centroid.x, geometry.centroid.y]",
         get_elevation="water_quality_count",
         elevation_scale=100,
         radius=5000,
@@ -109,7 +111,7 @@ if county_gdf is not None:
     fishing_spots_layer = pdk.Layer(
         "ColumnLayer",
         data=county_gdf,
-        get_position="[geometry.x, geometry.y]",
+        get_position="[geometry.centroid.x, geometry.centroid.y]",
         get_elevation="fishing_spots_count",
         elevation_scale=100,
         radius=5000,
