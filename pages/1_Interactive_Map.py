@@ -43,58 +43,76 @@ if fishing_spots_gdf is not None:
     m.add_geojson(fishing_spots_url, layer_name="Fishing Spots")
 m.to_streamlit(height=400)
 
+try:
+    county_gdf = gpd.read_file(county_url).to_crs("EPSG:4326")
+except Exception as e:
+    st.error(f"Error loading data: {e}")
+    county_gdf = None
+
 # 2. 水質測站數量 3D 面量圖
 st.subheader("2. 水質測站數量 (3D)")
 if county_gdf is not None:
-    water_quality_layer = pdk.Layer(
-        "ColumnLayer",
-        data=county_gdf,
-        get_position="[geometry.centroid.x, geometry.centroid.y]",
-        get_elevation="WATER_COUNT",
-        elevation_scale=100,
-        radius=10000,
-        get_fill_color="[0, 128, 255, 160]",
-        pickable=True,
-    )
-    water_quality_view_state = pdk.ViewState(
-        latitude=county_gdf.geometry.centroid.y.mean(),
-        longitude=county_gdf.geometry.centroid.x.mean(),
-        zoom=7,
-        pitch=40,
-    )
-    water_quality_map = pdk.Deck(
-        layers=[water_quality_layer],
-        initial_view_state=water_quality_view_state,
-        tooltip={"html": "<b>County:</b> {COUNTYNAME}<br><b>Water Count:</b> {WATER_COUNT}"},
-    )
-    st.pydeck_chart(water_quality_map)
+    if "geometry" in county_gdf.columns and "WATER_COUNT" in county_gdf.columns:
+        county_gdf["centroid_x"] = county_gdf.geometry.centroid.x
+        county_gdf["centroid_y"] = county_gdf.geometry.centroid.y
+        
+        water_quality_layer = pdk.Layer(
+            "ColumnLayer",
+            data=county_gdf,
+            get_position=["centroid_x", "centroid_y"],
+            get_elevation="WATER_COUNT",
+            elevation_scale=100,
+            radius=10000,
+            get_fill_color="[0, 128, 255, 160]",
+            pickable=True,
+        )
+        water_quality_view_state = pdk.ViewState(
+            latitude=county_gdf["centroid_y"].mean(),
+            longitude=county_gdf["centroid_x"].mean(),
+            zoom=7,
+            pitch=40,
+        )
+        water_quality_map = pdk.Deck(
+            layers=[water_quality_layer],
+            initial_view_state=water_quality_view_state,
+            tooltip={"html": "<b>County:</b> {COUNTYNAME}<br><b>Water Count:</b> {WATER_COUNT}"},
+        )
+        st.pydeck_chart(water_quality_map)
+    else:
+        st.warning("Required columns ('geometry', 'WATER_COUNT') are missing.")
+else:
+    st.error("County data could not be loaded.")
 
 # 3. 釣魚點數量 3D 面量圖
 st.subheader("3. 釣魚點數量 (3D)")
 if county_gdf is not None:
-    fishing_spots_layer = pdk.Layer(
-        "ColumnLayer",
-        data=county_gdf,
-        get_position="[geometry.centroid.x, geometry.centroid.y]",
-        get_elevation="FISH_COUNT",
-        elevation_scale=100,
-        radius=10000,
-        get_fill_color="[255, 165, 0, 160]",
-        pickable=True,
-    )
-    fishing_spots_view_state = pdk.ViewState(
-        latitude=county_gdf.geometry.centroid.y.mean(),
-        longitude=county_gdf.geometry.centroid.x.mean(),
-        zoom=7,
-        pitch=40,
-    )
-    fishing_spots_map = pdk.Deck(
-        layers=[fishing_spots_layer],
-        initial_view_state=fishing_spots_view_state,
-        tooltip={"html": "<b>County:</b> {COUNTYNAME}<br><b>Fish Count:</b> {FISH_COUNT}"},
-    )
-    st.pydeck_chart(fishing_spots_map)
-
+    if "geometry" in county_gdf.columns and "FISH_COUNT" in county_gdf.columns:
+        fishing_spots_layer = pdk.Layer(
+            "ColumnLayer",
+            data=county_gdf,
+            get_position=["centroid_x", "centroid_y"],
+            get_elevation="FISH_COUNT",
+            elevation_scale=100,
+            radius=10000,
+            get_fill_color="[255, 165, 0, 160]",
+            pickable=True,
+        )
+        fishing_spots_view_state = pdk.ViewState(
+            latitude=county_gdf["centroid_y"].mean(),
+            longitude=county_gdf["centroid_x"].mean(),
+            zoom=7,
+            pitch=40,
+        )
+        fishing_spots_map = pdk.Deck(
+            layers=[fishing_spots_layer],
+            initial_view_state=fishing_spots_view_state,
+            tooltip={"html": "<b>County:</b> {COUNTYNAME}<br><b>Fish Count:</b> {FISH_COUNT}"},
+        )
+        st.pydeck_chart(fishing_spots_map)
+    else:
+        st.warning("Required columns ('geometry', 'FISH_COUNT') are missing.")
+else:
+    st.error("County data could not be loaded.")
 # 顯示屬性資料表
 st.subheader("Water Quality Stations Data")
 if water_quality_stations_gdf is not None:
