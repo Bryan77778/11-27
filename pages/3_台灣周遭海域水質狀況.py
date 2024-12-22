@@ -31,14 +31,19 @@ st.sidebar.image(logo)
 url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/streamlit%E6%B0%B4%E8%B3%AA%E6%83%85%E6%B3%81.geojson"
 data = gpd.read_file(url)
 
-# 定義化學物質類別
-heavy_metals = ['Cd', 'Cr', 'Cu', 'Zn', 'Pb', 'Hg']
-organic_compounds = ['NO3_N', 'MI3PO4', 'NO2_N', 'SiO2']
-suspended_solids = ['SS']
+# 定義化學物質中文名稱
+heavy_metals_labels = {'Cd': '鎘', 'Cr': '鉻', 'Cu': '銅', 'Zn': '鋅', 'Pb': '鉛', 'Hg': '汞'}
+organic_compounds_labels = {'NO3_N': '硝酸鹽氮', 'MI3PO4': '磷酸鹽', 'NO2_N': '亞硝酸鹽氮', 'SiO2': '二氧化矽'}
+suspended_solids_labels = {'SS': '懸浮固體'}
 
-# 建立熱點圖函數
-def create_heatmap(data, value_columns, title):
+# 修改熱點圖函數
+def create_heatmap(data, value_columns, title, labels):
     st.subheader(title)
+    
+    # 加入中文名稱描述
+    description = ", ".join([f"{key} ({value})" for key, value in labels.items()])
+    st.markdown(f"**相關物質：** {description}")
+
     m = leafmap.Map(center=[23.5, 121], zoom=7)
 
     # 加入測站點位，並顯示水質數值的彈出視窗
@@ -84,11 +89,12 @@ def create_heatmap(data, value_columns, title):
         else:
             st.write(f"{value} 的離群測站數量不足 5 個，無法繪製直方圖。")
             st.write("--------------------")
+
 # 重金屬熱點圖
-create_heatmap(data, heavy_metals, "重金屬熱點圖")
+create_heatmap(data, heavy_metals, "重金屬熱點圖", heavy_metals_labels)
 
 # 有機化合物熱點圖
-create_heatmap(data, organic_compounds, "有機化合物熱點圖")
+create_heatmap(data, organic_compounds, "有機化合物熱點圖", organic_compounds_labels)
 
 # 懸浮物質熱點圖
-create_heatmap(data, suspended_solids, "懸浮物質熱點圖")
+create_heatmap(data, suspended_solids, "懸浮物質熱點圖", suspended_solids_labels)
