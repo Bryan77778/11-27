@@ -34,7 +34,7 @@ if water_quality_stations_gdf is not None:
     m.add_gdf(water_quality_stations_gdf, layer_name="水質測站")
 if fishing_spots_gdf is not None:
     m.add_gdf(fishing_spots_gdf, layer_name="釣魚點")
-m.to_streamlit(height=300)
+m.to_streamlit(height=200)
 
 # 二、釣魚點與測站地圖並排呈現
 st.subheader("二、釣魚點與測站地圖並排呈現")
