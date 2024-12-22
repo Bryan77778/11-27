@@ -1,5 +1,3 @@
-第一頁程式碼
-
 import streamlit as st
 import leafmap.foliumap as leafmap
 import geopandas as gpd
