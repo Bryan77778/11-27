@@ -87,7 +87,7 @@ try:
             "浪向": wave_direction,
             "週期": wave_period,
             "流向": ocean_current_direction,
-            "流速": ocean_current_speed
+            "流速": ocean_current_speed,
             "時間": datetime
         })
     
