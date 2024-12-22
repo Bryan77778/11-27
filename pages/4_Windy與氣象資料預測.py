@@ -79,7 +79,8 @@ try:
         wave_period = location["WavePeriod"]
         ocean_current_direction = location["OceanCurrentDirectionForecast"]
         ocean_current_speed = location["OceanCurrentSpeed"]
-
+        datetime = location["DateTime"]
+        
         table_data.append({
             "地點": loc_name,
             "浪高": wave_height,
