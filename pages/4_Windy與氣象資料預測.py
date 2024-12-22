@@ -9,9 +9,18 @@ import requests
 WINDY_API_KEY = "Q2V4GyCCzdkfMxBXqrplP2UbxXLjBrEn"
 water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
 weather_forecast_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E8%B1%A1%E8%B3%87%E6%96%99%E9%A0%90%E5%A0%B1.json"
+fishweather= "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E8%B1%A1%E6%95%B8%E5%80%BC%E6%A8%A1%E5%BC%8F%E9%A0%90%E5%A0%B1%E8%B3%87%E6%96%99-%E7%94%9F%E6%B4%BB%E6%B0%A3%E8%B1%A1-%E6%B5%B7%E6%B0%B4%E6%B5%B4%E5%A0%B4%E3%80%81%E4%BC%91%E9%96%92%E6%BC%81%E6%B8%AF%E3%80%81%E6%B5%B7%E9%87%A3%E4%B9%8B%E6%B3%A2%E6%B5%81%E6%A8%A1%E5%BC%8F%E9%A0%90%E5%A0%B1%E8%B3%87%E6%96%99.json"
+
 # Streamlit 應用標題
 st.title("Windy與氣象資料預測")
+st.markdown(
+"""
+- 選擇不同的Windy圖台，像是風速、溫度、降雨等
+- 可以在Windy內查看未來五天的預測情況
+- 點擊水質測站點位地圖(請勿點到圖標)，Windy圖台會自動更新位置
 
+"""
+)
 # 設定地圖的初始中心位置與縮放級別
 initial_lat, initial_lon = 23.5, 121  # 台灣中間位置
 zoom_level = 6
@@ -23,7 +32,7 @@ if "windy_lat" not in st.session_state:
     st.session_state["windy_zoom"] = zoom_level
 
 # 左側：Windy 動態風速圖
-st.write("### Windy 動態風速")
+st.write("### Windy 動態圖台")
 windy_url = f"""
 <iframe 
     width="100%" 
@@ -57,29 +66,36 @@ st.write("### 台灣周遭海域海象預測(6hr)")
 
 # 解析 JSON 資料
 try:
-    weather_data = pd.read_json(weather_forecast_url)
+    # 讀取氣象資料
+    weather_data = pd.read_json(fishweather)  # 使用 'fishweather' 變數來讀取資料
     location_data = weather_data["cwaopendata"]["dataset"]["location"]
 
     # 組織資料表
     table_data = []
     for location in location_data:
-        loc_name = location["locationName"]
-        for element in location["weatherElement"]:
-            for time_data in element["time"]:
-                table_data.append({
-                    "地點": loc_name,
-                    "要素": element["elementName"],
-                    "起始時間": time_data["startTime"],
-                    "結束時間": time_data["endTime"],
-                    "描述": time_data["parameter"]["parameterName"],
-                    "數值": time_data["parameter"].get("parameterValue", "N/A")
-                })
+        loc_name = location["LocationName"]  # 使用正確的鍵名 "LocationName"
+        wave_height = location["SignificantWaveHeight"]
+        wave_direction = location["WaveDirectionForecast"]
+        wave_period = location["WavePeriod"]
+        ocean_current_direction = location["OceanCurrentDirectionForecast"]
+        ocean_current_speed = location["OceanCurrentSpeed"]
+
+        table_data.append({
+            "地點": loc_name,
+            "浪高": wave_height,
+            "浪向": wave_direction,
+            "週期": wave_period,
+            "流向": ocean_current_direction,
+            "流速": ocean_current_speed
+        })
+    
+    # 創建 DataFrame 並顯示
     df = pd.DataFrame(table_data)
     st.dataframe(df)
 
 except Exception as e:
     st.error(f"無法載入或解析 JSON 資料: {e}")
-
+    
 tide_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%BD%AE%E6%B1%90%E9%A0%90%E5%A0%B1-%E6%9C%AA%E4%BE%861%E5%80%8B%E6%9C%88%E6%BD%AE%E6%B1%90%E9%A0%90%E5%A0%B1.json"
 
 try:
