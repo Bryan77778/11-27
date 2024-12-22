@@ -5,12 +5,14 @@ import leafmap.foliumap as leafmap
 # 設定頁面布局
 st.set_page_config(layout="wide")
 st.title("釣魚地點及水質測站相對位置")
-st.markdown("""
-選擇不同的底圖查看釣魚點位，以及水質測站點位的相對位置.
-圖台右上方可勾選以呈現不同的圖層.
-屬性資料表展示釣魚點位，以及水質測站的基本資料.
-注意：請勿選擇OpenStreetMap當作底圖，否則點位會顯示不出來.
-""")
+st.markdown(
+"""
+- 選擇不同的底圖查看釣魚點位，以及水質測站點位的相對位置
+- 圖台右上方可勾選以呈現不同的圖層
+- 屬性資料表展示釣魚點位，以及水質測站的基本資料
+- **注意**：請勿選擇OpenStreetMap當作底圖，否則點位會無法顯示
+"""
+)
 # 資料來源
 county_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E7%B8%A3%E5%B8%82%E8%A8%88%E6%95%B8%E7%B5%90%E6%9E%9C4326.shp"
 water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
