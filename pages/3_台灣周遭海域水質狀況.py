@@ -6,19 +6,27 @@ import numpy as np
 
 # 設定 Streamlit 頁面配置
 st.set_page_config(layout="wide")
-
+st.markdown(
+"""
+- 化學元素會以熱點圖的形式呈現，分別有重金屬、有機化合物、懸浮物質
+- 圖台右上方可勾選以呈現不同的化學元素
+- 屬性資料表展示化學元素數值
+- 當測站中的元素數值大於90%時，會被視為離群測站
+- 某個化學元素離群測站超過五個會被繪製成直方圖
+- 可用於參考海域水質情況
+"""
+)
 # 側邊欄內容
 markdown = """
 Web App URL: <https://geotemplate.streamlit.app>
 GitHub Repository: <https://github.com/giswqs/streamlit-multipage-template>
 """
-
 st.sidebar.title("About")
 st.sidebar.info(markdown)
 logo = "https://i.imgur.com/UbOXYAU.png"
 st.sidebar.image(logo)
 
-st.title("測站水質熱點圖")
+st.title("台灣周遭海域水質狀況")
 
 # 下載 GeoJSON 資料
 url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/streamlit%E6%B0%B4%E8%B3%AA%E6%83%85%E6%B3%81.geojson"
