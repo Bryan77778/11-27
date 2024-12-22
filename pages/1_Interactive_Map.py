@@ -105,8 +105,3 @@ if water_quality_stations_gdf is not None:
 st.subheader("釣魚點資料")
 if fishing_spots_gdf is not None:
     st.dataframe(fishing_spots_gdf.head(10))  # 顯示前10筆資料
-
-# 顯示縣市水質測站與釣魚點的屬性資料表
-st.subheader("縣市水質測站與釣魚點資料")
-if county_gdf is not None:
-    st.dataframe(county_gdf[["COUNTYNAME", "WATER_COUNT", "FISH_COUNT"]].head(10))  # 顯示前10筆資料
