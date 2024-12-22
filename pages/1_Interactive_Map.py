@@ -38,7 +38,7 @@ row1_col1, row1_col2 = st.columns(2)
 with row1_col1:
     st.write("### 左側地圖：水質測站點位地圖")
     m1 = leafmap.Map(center=[23.5, 121], zoom=8)
-    m1.add_basemap("OpenStreetMap")
+    m1.add_basemap("OpenTopoMap")
     if water_quality_stations_gdf is not None:
         m1.add_gdf(water_quality_stations_gdf, layer_name="水質測站")
     m1.to_streamlit(height=400)
@@ -46,7 +46,7 @@ with row1_col1:
 with row1_col2:
     st.write("### 右側地圖：釣魚點點位地圖")
     m2 = leafmap.Map(center=[23.5, 121], zoom=8)
-    m2.add_basemap("OpenStreetMap")
+    m2.add_basemap("OpenTopoMap")
     if fishing_spots_gdf is not None:
         m2.add_gdf(fishing_spots_gdf, layer_name="釣魚點")
     m2.to_streamlit(height=400)
@@ -58,7 +58,7 @@ row2_col1, row2_col2 = st.columns(2)
 with row2_col1:
     st.write("### 左側地圖：水質測站群集地圖")
     m3 = leafmap.Map(center=[23.5, 121], zoom=8)
-    m3.add_basemap("OpenStreetMap")
+    m3.add_basemap("OpenTopoMap")
     if water_quality_stations_gdf is not None:
         m3.add_points_from_xy(
             water_quality_stations_gdf,
@@ -72,7 +72,7 @@ with row2_col1:
 with row2_col2:
     st.write("### 右側地圖：釣魚點群集地圖")
     m4 = leafmap.Map(center=[23.5, 121], zoom=8)
-    m4.add_basemap("OpenStreetMap")
+    m4.add_basemap("OpenTopoMap")
     if fishing_spots_gdf is not None:
         m4.add_points_from_xy(
             fishing_spots_gdf,
