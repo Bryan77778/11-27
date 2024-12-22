@@ -28,6 +28,12 @@ except Exception as e:
     water_quality_stations_gdf = None
     fishing_spots_gdf = None
 
+fishing_spots_gdf["XPOS"] = fishing_spots_gdf["XPOS"].astype(float)
+fishing_spots_gdf["YPOS"] = fishing_spots_gdf["YPOS"].astype(float)
+water_quality_stations_gdf["LON"] = water_quality_stations_gdf["LON"].astype(float)
+water_quality_stations_gdf["LAT"] = water_quality_stations_gdf["LAT"].astype(float)
+
+
 # 1. 點位地圖
 st.subheader("1. 點位地圖")
 m = leafmap.Map(locate_control=True, latlon_control=True, draw_export=True, minimap_control=True)
