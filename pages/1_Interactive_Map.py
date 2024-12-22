@@ -26,7 +26,7 @@ default_basemap = "OpenTopoMap"
 # 一、點位地圖呈現
 st.subheader("一、點位地圖呈現")
 selected_basemap = st.selectbox("選擇點位地圖的底圖", basemap_options, index=basemap_options.index(default_basemap))
-m = leafmap.Map(locate_control=True, latlon_control=True, draw_export=True, minimap_control=True)
+m = leafmap.Map(locate_control=True, zoom=8, latlon_control=True, draw_export=True, minimap_control=True)
 m.add_basemap(selected_basemap)
 if county_gdf is not None:
     m.add_gdf(county_gdf, layer_name="縣市邊界")
