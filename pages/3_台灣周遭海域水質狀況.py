@@ -32,9 +32,9 @@ url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/streamlit%E6%B0%B
 data = gpd.read_file(url)
 
 # 定義化學物質類別
-heavy_metals = ['Cd鎘', 'Cr鉻', 'Cu銅', 'Zn鋅', 'Pb鉛', 'Hg汞']
-organic_compounds = ['NO3_N硝酸氮', 'MI3PO4磷酸鹽', 'NO2_N亞硝酸氮', 'SiO2二氧化矽']
-suspended_solids = ['SS二氧化矽']
+heavy_metals = ['Cd', 'Cr', 'Cu', 'Zn', 'Pb', 'Hg']
+organic_compounds = ['NO3_N', 'MI3PO4', 'NO2_N', 'SiO2']
+suspended_solids = ['SS']
 
 # 建立熱點圖函數
 def create_heatmap(data, value_columns, title):
