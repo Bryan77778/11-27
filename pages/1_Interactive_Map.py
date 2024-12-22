@@ -41,32 +41,42 @@ if fishing_spots_gdf is not None:
 if county_gdf is not None:
     county_gdf = county_gdf.to_crs("EPSG:4326")
 
-# 將 Location 欄位改名為 county
-if water_quality_stations_gdf is not None and "Location" in water_quality_stations_gdf.columns:
-    water_quality_stations_gdf.rename(columns={"Location": "county"}, inplace=True)
+# 將 Location 改名為 county (水質測站)
+if water_quality_stations_gdf is not None:
+    if "Location" in water_quality_stations_gdf.columns:
+        water_quality_stations_gdf.rename(columns={"Location": "county"}, inplace=True)
+    else:
+        st.error("The 'Location' column is missing in the water quality dataset.")
 
-# 確保 fishing_spots_gdf 的 "COUNTY" 欄位改名為 "county"
+# 將 COUNTY 改名為 county (釣魚點)
 if fishing_spots_gdf is not None:
     if "COUNTY" in fishing_spots_gdf.columns:
         fishing_spots_gdf.rename(columns={"COUNTY": "county"}, inplace=True)
+    else:
+        st.error("The 'COUNTY' column is missing in the fishing spots dataset.")
 
 # 計算點位數量並合併到縣市圖層
 if county_gdf is not None:
     # 計算水質測站數量
-    if water_quality_stations_gdf is not None:
+    if water_quality_stations_gdf is not None and "county" in water_quality_stations_gdf.columns:
         water_quality_counts = water_quality_stations_gdf["county"].value_counts().reset_index()
         water_quality_counts.columns = ["county", "water_quality_count"]
         county_gdf = county_gdf.merge(water_quality_counts, on="county", how="left")
         county_gdf["water_quality_count"] = county_gdf["water_quality_count"].fillna(0)
+    else:
+        st.error("The 'county' column is missing in the water quality dataset.")
 
     # 計算釣魚點數量
-    if fishing_spots_gdf is not None:
+    if fishing_spots_gdf is not None and "county" in fishing_spots_gdf.columns:
         fishing_spots_counts = fishing_spots_gdf["county"].value_counts().reset_index()
         fishing_spots_counts.columns = ["county", "fishing_spots_count"]
         county_gdf = county_gdf.merge(fishing_spots_counts, on="county", how="left")
         county_gdf["fishing_spots_count"] = county_gdf["fishing_spots_count"].fillna(0)
+    else:
+        st.error("The 'county' column is missing in the fishing spots dataset.")
 
-# 1. 點位地圖
+# 顯示地圖和統計數據
+# 點位地圖
 st.subheader("1. 點位地圖")
 m = leafmap.Map(locate_control=True, latlon_control=True, draw_export=True, minimap_control=True)
 m.add_basemap("OpenTopoMap")
@@ -76,7 +86,7 @@ if fishing_spots_gdf is not None:
     m.add_geojson(fishing_spots_url, layer_name="Fishing Spots")
 m.to_streamlit(height=400)
 
-# 2. 縣市水質測站數量 3D 化
+# 縣市水質測站數量 3D 化
 st.subheader("2. 水質測站數量 (3D)")
 if county_gdf is not None:
     water_quality_layer = pdk.Layer(
@@ -89,23 +99,15 @@ if county_gdf is not None:
         get_fill_color="[0, 128, 255, 160]",
         pickable=True,
     )
-
-    water_quality_view_state = pdk.ViewState(
+    view_state = pdk.ViewState(
         latitude=county_gdf.geometry.centroid.y.mean(),
         longitude=county_gdf.geometry.centroid.x.mean(),
         zoom=7,
         pitch=40,
     )
+    st.pydeck_chart(pdk.Deck(layers=[water_quality_layer], initial_view_state=view_state))
 
-    water_quality_map = pdk.Deck(
-        layers=[water_quality_layer],
-        initial_view_state=water_quality_view_state,
-        tooltip={"html": "<b>County:</b> {county}<br><b>Count:</b> {water_quality_count}"},
-    )
-
-    st.pydeck_chart(water_quality_map)
-
-# 3. 縣市釣魚點數量 3D 化
+# 縣市釣魚點數量 3D 化
 st.subheader("3. 釣魚點數量 (3D)")
 if county_gdf is not None:
     fishing_spots_layer = pdk.Layer(
@@ -118,21 +120,7 @@ if county_gdf is not None:
         get_fill_color="[255, 165, 0, 160]",
         pickable=True,
     )
-
-    fishing_spots_view_state = pdk.ViewState(
-        latitude=county_gdf.geometry.centroid.y.mean(),
-        longitude=county_gdf.geometry.centroid.x.mean(),
-        zoom=7,
-        pitch=40,
-    )
-
-    fishing_spots_map = pdk.Deck(
-        layers=[fishing_spots_layer],
-        initial_view_state=fishing_spots_view_state,
-        tooltip={"html": "<b>County:</b> {county}<br><b>Count:</b> {fishing_spots_count}"},
-    )
-
-    st.pydeck_chart(fishing_spots_map)
+    st.pydeck_chart(pdk.Deck(layers=[fishing_spots_layer], initial_view_state=view_state))
 
 # 屬性資料表顯示
 st.subheader("County Data")
