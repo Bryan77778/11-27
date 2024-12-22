@@ -36,66 +36,6 @@ if county_gdf is not None:
     m.add_geojson(county_url, layer_name="縣市邊界")
 m.to_streamlit(height=400)
 
-# 2. 水質測站數量 3D 化
-st.subheader("2. 水質測站數量 (3D)")
-if county_gdf is not None:
-    # 水質測站數量 3D 顯示
-    water_quality_layer = pdk.Layer(
-        "ColumnLayer",
-        data=county_gdf,
-        get_position=["geometry.centroid.x", "geometry.centroid.y"],  # 使用縣市重心點
-        get_elevation="WATER_COUNT",  # 使用水質測站數量作為高度
-        elevation_scale=100,  # 調整高度比例
-        radius=5000,  # 調整圓柱半徑
-        get_fill_color="[0, 128, 255, 160]",  # 顏色為藍色
-        pickable=True,
-    )
-
-    water_quality_view_state = pdk.ViewState(
-        latitude=county_gdf.geometry.centroid.y.mean(),
-        longitude=county_gdf.geometry.centroid.x.mean(),
-        zoom=7,
-        pitch=40,
-    )
-
-    water_quality_map = pdk.Deck(
-        layers=[water_quality_layer],
-        initial_view_state=water_quality_view_state,
-        tooltip={"html": "<b>縣市:</b> {COUNTYNAME}<br><b>水質測站數量:</b> {WATER_COUNT}"},
-    )
-
-    st.pydeck_chart(water_quality_map)
-
-# 3. 釣魚點數量 3D 化
-st.subheader("3. 釣魚點數量 (3D)")
-if county_gdf is not None:
-    # 釣魚點數量 3D 顯示
-    fishing_spots_layer = pdk.Layer(
-        "ColumnLayer",
-        data=county_gdf,
-        get_position=["geometry.centroid.x", "geometry.centroid.y"],  # 使用縣市重心點
-        get_elevation="FISH_COUNT",  # 使用釣魚點數量作為高度
-        elevation_scale=100,  # 調整高度比例
-        radius=5000,  # 調整圓柱半徑
-        get_fill_color="[255, 165, 0, 160]",  # 顏色為橙色
-        pickable=True,
-    )
-
-    fishing_spots_view_state = pdk.ViewState(
-        latitude=county_gdf.geometry.centroid.y.mean(),
-        longitude=county_gdf.geometry.centroid.x.mean(),
-        zoom=7,
-        pitch=40,
-    )
-
-    fishing_spots_map = pdk.Deck(
-        layers=[fishing_spots_layer],
-        initial_view_state=fishing_spots_view_state,
-        tooltip={"html": "<b>縣市:</b> {COUNTYNAME}<br><b>釣魚點數量:</b> {FISH_COUNT}"},
-    )
-
-    st.pydeck_chart(fishing_spots_map)
-
 # 顯示水質測站資料表
 st.subheader("水質測站資料")
 if water_quality_stations_gdf is not None:
