@@ -18,7 +18,7 @@ st.markdown(
 - 選擇不同的Windy圖台，像是風速、溫度、降雨等
 - 可以在Windy內查看未來五天的預測情況
 - 點擊水質測站點位地圖(請勿點到圖標)，Windy圖台會自動更新位置
-
+- 在下方海象、潮汐預測屬性資料表內搜尋地點，以查看預報
 """
 )
 # 設定地圖的初始中心位置與縮放級別
@@ -62,7 +62,7 @@ if click_info and click_info.get("last_clicked"):
     st.experimental_rerun()
 
 # 下方：屬性資料表
-st.write("### 台灣周遭海域海象預測(6hr)")
+st.write("### 台灣周遭海域海象預測(2024-12-22 ~ 2024-12-25)")
 
 # 解析 JSON 資料
 try:
@@ -87,6 +87,7 @@ try:
             "週期": wave_period,
             "流向": ocean_current_direction,
             "流速": ocean_current_speed
+            "時間": DateTime
         })
     
     # 創建 DataFrame 並顯示
