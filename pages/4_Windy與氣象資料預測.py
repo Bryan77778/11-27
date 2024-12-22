@@ -87,7 +87,7 @@ try:
             "週期": wave_period,
             "流向": ocean_current_direction,
             "流速": ocean_current_speed
-            "時間": DateTime
+            "時間": datetime
         })
     
     # 創建 DataFrame 並顯示
