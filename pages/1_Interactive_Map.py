@@ -33,12 +33,12 @@ st.subheader("1. 點位地圖")
 m = leafmap.Map(locate_control=True, latlon_control=True, draw_export=True, minimap_control=True)
 m.add_basemap("OpenTopoMap")
 if water_quality_stations_gdf is not None:
-    m.add_geojson(water_quality_stations_url, layer_name="水質測站")
+    m1.add_geojson(water_quality_stations_url, layer_name="水質測站")
 if fishing_spots_gdf is not None:
-    m.add_geojson(fishing_spots_url, layer_name="釣魚點")
+    m1.add_geojson(fishing_spots_url, layer_name="釣魚點")
 if county_gdf is not None:
-    m.add_geojson(county_url, layer_name="縣市邊界")
-m.to_streamlit(height=400)
+    m1.add_geojson(county_url, layer_name="縣市邊界")
+m1.to_streamlit(height=400)
 
 # 2. 四張地圖
 st.subheader("2. 多圖地圖顯示")
@@ -53,18 +53,18 @@ row1_col1, row1_col2 = st.columns(2)
 with row1_col1:
     basemap1 = st.selectbox("選擇左側地圖的底圖:", basemap_options, index=basemap_options.index("OpenStreetMap"))
     st.write("#### 左側地圖：水質測站 (點位)")
-    m1 = leafmap.Map(center=[23.5, 121], zoom=8)
-    m1.add_basemap(basemap1)
-    m1.add_geojson(water_quality_stations_url, layer_name="Water Quality Stations")
-    m1.to_streamlit(height=500)
+    m2 = leafmap.Map(center=[23.5, 121], zoom=8)
+    m2.add_basemap(basemap1)
+    m2.add_geojson(water_quality_stations_url, layer_name="Water Quality Stations")
+    m2.to_streamlit(height=500)
 
 with row1_col2:
     basemap2 = st.selectbox("選擇右側地圖的底圖:", basemap_options, index=basemap_options.index("OpenStreetMap"))
     st.write("#### 右側地圖：釣魚點 (點位)")
-    m2 = leafmap.Map(center=[23.5, 121], zoom=8)
-    m2.add_basemap(basemap2)
-    m2.add_geojson(fishing_spots_url, layer_name="Fishing Spots")
-    m2.to_streamlit(height=500)
+    m3 = leafmap.Map(center=[23.5, 121], zoom=8)
+    m3.add_basemap(basemap2)
+    m3.add_geojson(fishing_spots_url, layer_name="Fishing Spots")
+    m3.to_streamlit(height=500)
 
 # 第二行地圖
 st.write("### 第二行地圖")
@@ -73,30 +73,30 @@ row2_col1, row2_col2 = st.columns(2)
 with row2_col1:
     basemap3 = st.selectbox("選擇左下地圖的底圖:", basemap_options, index=basemap_options.index("OpenStreetMap"))
     st.write("#### 左側地圖：水質測站 (Marker Cluster)")
-    m3 = leafmap.Map(center=[23.5, 121], zoom=8)
-    m3.add_basemap(basemap3)
+    m4 = leafmap.Map(center=[23.5, 121], zoom=8)
+    m4.add_basemap(basemap3)
     if water_quality_stations_gdf is not None:
-        m3.add_points_from_xy(
+        m4.add_points_from_xy(
             water_quality_stations_gdf,
             x="LON",  # 根據實際資料調整欄位名稱
             y="LAT",  # 根據實際資料調整欄位名稱
             layer_name="水質監測站",
         )
-    m3.to_streamlit(height=500)
+    m4.to_streamlit(height=500)
 
 with row2_col2:
     basemap4 = st.selectbox("選擇右下地圖的底圖:", basemap_options, index=basemap_options.index("OpenStreetMap"))
     st.write("#### 右側地圖：釣魚點 (Marker Cluster)")
-    m4 = leafmap.Map(center=[23.5, 121], zoom=8)
-    m4.add_basemap(basemap4)
+    m5 = leafmap.Map(center=[23.5, 121], zoom=8)
+    m5.add_basemap(basemap4)
     if fishing_spots_gdf is not None:
-        m4.add_points_from_xy(
+        m5.add_points_from_xy(
             fishing_spots_gdf,
             x="XPOS",  # 根據實際資料調整欄位名稱
             y="YPOS",  # 根據實際資料調整欄位名稱
             layer_name="釣魚點",
         )
-    m4.to_streamlit(height=500)
+    m5.to_streamlit(height=500)
 
 # 3. 屬性資料表
 st.subheader("水質測站資料")
