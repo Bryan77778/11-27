@@ -65,7 +65,7 @@ row2_col1, row2_col2 = st.columns(2)
 with row2_col1:
     st.write("### 左側地圖：水質測站群集地圖")
     basemap3 = st.selectbox("選擇水質測站群集地圖的底圖", basemap_options, key="map3", index=basemap_options.index(default_basemap))
-    m3 = leafmap.Map(center=[23.5, 121], zoom=8)
+    m3 = leafmap.Map(center=[23.5, 121], zoom=7)
     m3.add_basemap(basemap3)
     if water_quality_stations_gdf is not None:
         m3.add_points_from_xy(
@@ -80,7 +80,7 @@ with row2_col1:
 with row2_col2:
     st.write("### 右側地圖：釣魚點群集地圖")
     basemap4 = st.selectbox("選擇釣魚點群集地圖的底圖", basemap_options, key="map4", index=basemap_options.index(default_basemap))
-    m4 = leafmap.Map(center=[23.5, 121], zoom=8)
+    m4 = leafmap.Map(center=[23.5, 121], zoom=7)
     m4.add_basemap(basemap4)
     if fishing_spots_gdf is not None:
         m4.add_points_from_xy(
