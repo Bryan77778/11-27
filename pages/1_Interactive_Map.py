@@ -21,18 +21,12 @@ except Exception as e:
 
 # 讀取水質測站和釣魚點資料
 try:
-    water_quality_stations_gdf = gpd.read_file(waternew)
-    fishing_spots_gdf = gpd.read_file(fishnew)
+    water_quality_stations_gdf = gpd.read_file(water_quality_stations_url)
+    fishing_spots_gdf = gpd.read_file(fishing_spots_url)
 except Exception as e:
     st.error(f"載入GeoJSON資料時出現錯誤: {e}")
     water_quality_stations_gdf = None
     fishing_spots_gdf = None
-
-fishing_spots_gdf["XPOS"] = fishing_spots_gdf["XPOS"].astype(float)
-fishing_spots_gdf["YPOS"] = fishing_spots_gdf["YPOS"].astype(float)
-water_quality_stations_gdf["LON"] = water_quality_stations_gdf["LON"].astype(float)
-water_quality_stations_gdf["LAT"] = water_quality_stations_gdf["LAT"].astype(float)
-
 
 # 1. 點位地圖
 st.subheader("1. 點位地圖")
@@ -61,7 +55,7 @@ with row1_col1:
     st.write("#### 左側地圖：水質測站 (點位)")
     m1 = leafmap.Map(center=[23.5, 121], zoom=8)
     m1.add_basemap(basemap1)
-    m1.add_geojson(waternew, layer_name="Water Quality Stations")
+    m1.add_geojson(water_quality_stations_url, layer_name="Water Quality Stations")
     m1.to_streamlit(height=500)
 
 with row1_col2:
@@ -69,7 +63,7 @@ with row1_col2:
     st.write("#### 右側地圖：釣魚點 (點位)")
     m2 = leafmap.Map(center=[23.5, 121], zoom=8)
     m2.add_basemap(basemap2)
-    m2.add_geojson(fishnew, layer_name="Fishing Spots")
+    m2.add_geojson(fishing_spots_url, layer_name="Fishing Spots")
     m2.to_streamlit(height=500)
 
 # 第二行地圖
