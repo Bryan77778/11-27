@@ -19,10 +19,14 @@ except Exception as e:
     st.error(f"資料讀取錯誤: {e}")
     county_gdf, water_quality_stations_gdf, fishing_spots_gdf = None, None, None
 
+# 提供底圖選項
+basemap_options = list(leafmap.basemaps.keys())
+
 # 一、點位地圖呈現
 st.subheader("一、點位地圖呈現")
+selected_basemap = st.selectbox("選擇點位地圖的底圖", basemap_options, index=basemap_options.index("OpenStreetMap"))
 m = leafmap.Map(locate_control=True, latlon_control=True, draw_export=True, minimap_control=True)
-m.add_basemap("OpenTopoMap")
+m.add_basemap(selected_basemap)
 if county_gdf is not None:
     m.add_gdf(county_gdf, layer_name="縣市邊界")
 if water_quality_stations_gdf is not None:
@@ -37,16 +41,18 @@ row1_col1, row1_col2 = st.columns(2)
 
 with row1_col1:
     st.write("### 左側地圖：水質測站點位地圖")
+    basemap1 = st.selectbox("選擇水質測站地圖的底圖", basemap_options, key="map1")
     m1 = leafmap.Map(center=[23.5, 121], zoom=8)
-    m1.add_basemap("OpenTopoMap")
+    m1.add_basemap(basemap1)
     if water_quality_stations_gdf is not None:
         m1.add_gdf(water_quality_stations_gdf, layer_name="水質測站")
     m1.to_streamlit(height=400)
 
 with row1_col2:
     st.write("### 右側地圖：釣魚點點位地圖")
+    basemap2 = st.selectbox("選擇釣魚點地圖的底圖", basemap_options, key="map2")
     m2 = leafmap.Map(center=[23.5, 121], zoom=8)
-    m2.add_basemap("OpenTopoMap")
+    m2.add_basemap(basemap2)
     if fishing_spots_gdf is not None:
         m2.add_gdf(fishing_spots_gdf, layer_name="釣魚點")
     m2.to_streamlit(height=400)
@@ -57,8 +63,9 @@ row2_col1, row2_col2 = st.columns(2)
 
 with row2_col1:
     st.write("### 左側地圖：水質測站群集地圖")
+    basemap3 = st.selectbox("選擇水質測站群集地圖的底圖", basemap_options, key="map3")
     m3 = leafmap.Map(center=[23.5, 121], zoom=8)
-    m3.add_basemap("OpenTopoMap")
+    m3.add_basemap(basemap3)
     if water_quality_stations_gdf is not None:
         m3.add_points_from_xy(
             water_quality_stations_gdf,
@@ -71,8 +78,9 @@ with row2_col1:
 
 with row2_col2:
     st.write("### 右側地圖：釣魚點群集地圖")
+    basemap4 = st.selectbox("選擇釣魚點群集地圖的底圖", basemap_options, key="map4")
     m4 = leafmap.Map(center=[23.5, 121], zoom=8)
-    m4.add_basemap("OpenTopoMap")
+    m4.add_basemap(basemap4)
     if fishing_spots_gdf is not None:
         m4.add_points_from_xy(
             fishing_spots_gdf,
