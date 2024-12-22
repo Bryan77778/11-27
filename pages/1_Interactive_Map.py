@@ -79,8 +79,6 @@ with row2_col1:
             water_quality_stations_gdf,
             x="LON",  # 根據實際資料調整欄位名稱
             y="LAT",  # 根據實際資料調整欄位名稱
-            spin=True,
-            add_legend=True,
             layer_name="水質監測站",
         )
     m3.to_streamlit(height=500)
@@ -95,8 +93,6 @@ with row2_col2:
             fishing_spots_gdf,
             x="XPOS",  # 根據實際資料調整欄位名稱
             y="YPOS",  # 根據實際資料調整欄位名稱
-            spin=True,
-            add_legend=True,
             layer_name="釣魚點",
         )
     m4.to_streamlit(height=500)
