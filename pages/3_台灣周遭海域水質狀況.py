@@ -40,6 +40,11 @@ suspended_solids_labels = {'SS': '懸浮固體'}
 def create_heatmap(data, value_columns, title, labels):
     st.subheader(title)
     
+    # 確保 labels 是字典格式
+    if not isinstance(labels, dict):
+        st.error("Labels 必須是字典格式")
+        return
+
     # 加入中文名稱描述
     description = ", ".join([f"{key} ({value})" for key, value in labels.items()])
     st.markdown(f"**相關物質：** {description}")
