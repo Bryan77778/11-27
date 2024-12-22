@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 
 # 設定 Streamlit 頁面配置
+st.title("台灣周遭海域水質狀況")
 st.set_page_config(layout="wide")
 st.markdown(
 """
@@ -25,8 +26,6 @@ st.sidebar.title("About")
 st.sidebar.info(markdown)
 logo = "https://i.imgur.com/UbOXYAU.png"
 st.sidebar.image(logo)
-
-st.title("台灣周遭海域水質狀況")
 
 # 下載 GeoJSON 資料
 url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/streamlit%E6%B0%B4%E8%B3%AA%E6%83%85%E6%B3%81.geojson"
