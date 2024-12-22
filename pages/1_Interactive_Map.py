@@ -95,7 +95,11 @@ if county_gdf is not None:
     )
     st.pydeck_chart(fishing_spots_map)
 
-# 4. 屬性資料表
-st.subheader("4. 屬性資料表")
-if county_gdf is not None:
-    st.dataframe(county_gdf[["COUNTYNAME", "WATER_COUNT", "FISH_COUNT"]].sort_values(by="WATER_COUNT", ascending=False))
+# 顯示屬性資料表
+st.subheader("Water Quality Stations Data")
+if water_quality_stations_gdf is not None:
+    st.dataframe(water_quality_stations_gdf.head(10))  # 顯示前10筆資料
+
+st.subheader("Fishing Spots Data")
+if fishing_spots_gdf is not None:
+    st.dataframe(fishing_spots_gdf.head(10))  # 顯示前10筆資料
