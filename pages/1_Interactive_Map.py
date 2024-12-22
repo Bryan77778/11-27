@@ -47,7 +47,7 @@ with row1_col1:
     m1.add_basemap(basemap1)
     if water_quality_stations_gdf is not None:
         m1.add_gdf(water_quality_stations_gdf, layer_name="水質測站")
-    m1.to_streamlit(height=400)
+    m1.to_streamlit(height=500)
 
 with row1_col2:
     st.write("### 右側地圖：釣魚點點位地圖")
@@ -56,7 +56,7 @@ with row1_col2:
     m2.add_basemap(basemap2)
     if fishing_spots_gdf is not None:
         m2.add_gdf(fishing_spots_gdf, layer_name="釣魚點")
-    m2.to_streamlit(height=400)
+    m2.to_streamlit(height=500)
 
 # 三、釣魚點與測站群集地圖並排呈現
 st.subheader("三、釣魚點與測站群集地圖並排呈現")
@@ -75,7 +75,7 @@ with row2_col1:
             cluster=True,
             layer_name="水質測站群集",
         )
-    m3.to_streamlit(height=400)
+    m3.to_streamlit(height=500)
 
 with row2_col2:
     st.write("### 右側地圖：釣魚點群集地圖")
@@ -90,7 +90,7 @@ with row2_col2:
             cluster=True,
             layer_name="釣魚點群集",
         )
-    m4.to_streamlit(height=400)
+    m4.to_streamlit(height=500)
 
 # 四、釣魚點與測站的屬性資料表
 st.subheader("四、釣魚點與測站的屬性資料表")
