@@ -12,11 +12,11 @@ try:
     water_quality_stations_gdf = gpd.read_file(water_quality_stations_url)
     fishing_spots_gdf = gpd.read_file(fishing_spots_url)
 except Exception as e:
-    st.error(f"Error loading GeoJSON data: {e}")
+    st.error(f"載入GeoJSON資料時出現錯誤: {e}")
     water_quality_stations_gdf = None
     fishing_spots_gdf = None
 
-# 計算各縣市點位數量
+# 計算各縣市的點位數量
 if water_quality_stations_gdf is not None:
     water_quality_stations_gdf = water_quality_stations_gdf.to_crs("EPSG:4326")
     water_quality_stations_gdf["county"] = water_quality_stations_gdf.geometry.apply(lambda x: x.y)  # 假設已經有對應縣市的資料
@@ -34,9 +34,9 @@ st.subheader("1. 點位地圖")
 m = leafmap.Map(locate_control=True, latlon_control=True, draw_export=True, minimap_control=True)
 m.add_basemap("OpenTopoMap")
 if water_quality_stations_gdf is not None:
-    m.add_geojson(water_quality_stations_url, layer_name="Water Quality Stations")
+    m.add_geojson(water_quality_stations_url, layer_name="水質測站")
 if fishing_spots_gdf is not None:
-    m.add_geojson(fishing_spots_url, layer_name="Fishing Spots")
+    m.add_geojson(fishing_spots_url, layer_name="釣魚點")
 m.to_streamlit(height=400)
 
 # 2. 縣市水質測站數量 3D 化
@@ -63,7 +63,7 @@ if water_quality_stations_gdf is not None:
     water_quality_map = pdk.Deck(
         layers=[water_quality_layer],
         initial_view_state=water_quality_view_state,
-        tooltip={"html": "<b>County:</b> {county}<br><b>Count:</b> {count}"},
+        tooltip={"html": "<b>縣市:</b> {county}<br><b>數量:</b> {count}"},
     )
 
     st.pydeck_chart(water_quality_map)
@@ -92,24 +92,16 @@ if fishing_spots_gdf is not None:
     fishing_spots_map = pdk.Deck(
         layers=[fishing_spots_layer],
         initial_view_state=fishing_spots_view_state,
-        tooltip={"html": "<b>County:</b> {county}<br><b>Count:</b> {count}"},
+        tooltip={"html": "<b>縣市:</b> {county}<br><b>數量:</b> {count}"},
     )
 
     st.pydeck_chart(fishing_spots_map)
 
 # 顯示屬性資料表
-st.subheader("Water Quality Stations Data")
+st.subheader("水質測站資料")
 if water_quality_stations_gdf is not None:
     st.dataframe(water_quality_stations_gdf.head(10))  # 顯示前10筆資料
 
-st.subheader("Fishing Spots Data")
-if fishing_spots_gdf is not None:
-    st.dataframe(fishing_spots_gdf.head(10))  # 顯示前10筆資料
-# 顯示屬性資料表
-st.subheader("Water Quality Stations Data")
-if water_quality_stations_gdf is not None:
-    st.dataframe(water_quality_stations_gdf.head(10))  # 顯示前10筆資料
-
-st.subheader("Fishing Spots Data")
+st.subheader("釣魚點資料")
 if fishing_spots_gdf is not None:
     st.dataframe(fishing_spots_gdf.head(10))  # 顯示前10筆資料
