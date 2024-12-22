@@ -10,7 +10,8 @@ st.set_page_config(layout="wide")
 county_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E7%B8%A3%E5%B8%82%E8%A8%88%E6%95%B8%E7%B5%90%E6%9E%9C4326.shp"
 water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
 fishing_spots_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E5%85%A8%E5%8F%B0%E9%96%8B%E6%94%BE%E9%87%A3%E9%BB%9E%E4%BD%8D%E7%BD%AE%20(1).geojson"
-
+waternew="https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E5%85%A8%E5%8F%B0%E9%96%8B%E6%94%BE%E9%87%A3%E9%BB%9E%E4%BD%8D%E7%BD%AENEW.geojson"
+fishnew="https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99NEW.geojson"
 # 讀取 SHP 文件
 try:
     county_gdf = gpd.read_file(county_url).to_crs("EPSG:4326")
@@ -20,8 +21,8 @@ except Exception as e:
 
 # 讀取水質測站和釣魚點資料
 try:
-    water_quality_stations_gdf = gpd.read_file(water_quality_stations_url)
-    fishing_spots_gdf = gpd.read_file(fishing_spots_url)
+    water_quality_stations_gdf = gpd.read_file(waternew)
+    fishing_spots_gdf = gpd.read_file(fishnew)
 except Exception as e:
     st.error(f"載入GeoJSON資料時出現錯誤: {e}")
     water_quality_stations_gdf = None
@@ -54,7 +55,7 @@ with row1_col1:
     st.write("#### 左側地圖：水質測站 (點位)")
     m1 = leafmap.Map(center=[23.5, 121], zoom=8)
     m1.add_basemap(basemap1)
-    m1.add_geojson(water_quality_stations_url, layer_name="Water Quality Stations")
+    m1.add_geojson(waternew, layer_name="Water Quality Stations")
     m1.to_streamlit(height=500)
 
 with row1_col2:
@@ -62,7 +63,7 @@ with row1_col2:
     st.write("#### 右側地圖：釣魚點 (點位)")
     m2 = leafmap.Map(center=[23.5, 121], zoom=8)
     m2.add_basemap(basemap2)
-    m2.add_geojson(fishing_spots_url, layer_name="Fishing Spots")
+    m2.add_geojson(fishnew, layer_name="Fishing Spots")
     m2.to_streamlit(height=500)
 
 # 第二行地圖
