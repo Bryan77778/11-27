@@ -32,9 +32,9 @@ st.markdown(
 st.markdown(
     """
     <div class="custom-text">
-    此應用展示如何在地圖上添加帶有 YouTube 連結的點座標。/n
-    - 點擊地圖上的點標記以查看詳細資訊。 /n
-    - 點擊彈出窗口中的連結以打開 YouTube。 /n
+    此應用展示如何在地圖上添加帶有 YouTube 連結的點座標。\n
+    - 點擊地圖上的點標記以查看詳細資訊。 \n
+    - 點擊彈出窗口中的連結以打開 YouTube。 \n
     </div>
     """,
     unsafe_allow_html=True
