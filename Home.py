@@ -22,7 +22,7 @@ st.markdown(
     <style>
     /* 修改 Markdown 的字體大小與顏色 */
     div.stMarkdown p {
-        font-size: 18px;  /* 設定字體大小 */
+        font-size: 20px;  /* 設定字體大小 */
         color: white;     /* 設定字體顏色 */
     }
     </style>
