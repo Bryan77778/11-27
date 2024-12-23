@@ -14,13 +14,40 @@ fishweather= "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%
 # Streamlit 應用標題
 st.title("Windy與氣象資料預測")
 st.markdown(
-"""
-- 選擇不同的Windy圖台，像是風速、溫度、降雨等
-- 可以在Windy內查看未來五天的預測情況
-- 點擊水質測站點位地圖(請勿點到圖標)，Windy圖台會自動更新位置
-- 在下方海象、潮汐預測屬性資料表內搜尋地點，以查看預報
-"""
+    """
+    <style>
+    .stApp {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                          url('https://i.imgur.com/D6zbNRN.png'); /* 添加半透明黑色遮罩 */
+        background-size: cover; /* 背景圖片填滿窗口 */
+        background-position: center; /* 背景圖片居中 */
+        color: white; /* 全局字體顏色設置為白色 */
+    }
+    .custom-text {
+        font-size: 18px; /* 設置文字大小 */
+        line-height: 1.6; /* 行距 */
+        color: white; /* 設置文字顏色 */
+    }
+    .stSelectbox div[role="combobox"] {
+        color: white;  /* 下拉選單內的文字設置為黑色（避免與白色背景衝突） */
+        background-color: white;  /* 下拉選單背景設置為白色 */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
 )
+st.markdown(
+    """
+    <div class="custom-text">
+    - 選擇不同的Windy圖台，像是風速、溫度、降雨等
+    - 可以在Windy內查看未來五天的預測情況
+    - 點擊水質測站點位地圖(請勿點到圖標)，Windy圖台會自動更新位置
+    - 在下方海象、潮汐預測屬性資料表內搜尋地點，以查看預報
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 # 設定地圖的初始中心位置與縮放級別
 initial_lat, initial_lon = 23.5, 121  # 台灣中間位置
 zoom_level = 6
