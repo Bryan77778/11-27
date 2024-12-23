@@ -42,6 +42,19 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+st.markdown(
+    """
+    <style>
+    .stSelectbox label {
+        color: white;  /* 將標籤文字改成白色 */
+        font-size: 16px;  /* 可選：調整字體大小 */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # 資料來源
 county_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E7%B8%A3%E5%B8%82%E8%A8%88%E6%95%B8%E7%B5%90%E6%9E%9C4326.shp"
 water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
