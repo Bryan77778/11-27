@@ -101,13 +101,14 @@ def create_heatmap(data, value_columns, title):
     # 分位數法檢測離群值並顯示結果
     st.write(f"Outlier Detection for {title}")
     for value in value_columns:
-        upper_bound = np.percentile(data[value].dropna(), 90)
+        # 計算 90 百分位數的上界值，取到小數點後五位
+        upper_bound = round(np.percentile(data[value].dropna(), 90), 5)
         outliers = data[data[value] > upper_bound]
-        
-        # 檢查離群測站數量是否 >= 5
+
+        # 顯示離群測站結果
         if len(outliers) >= 5:
             st.write(f"{value} 的離群測站: {len(outliers)} 個")
-            st.dataframe(outliers[["STATION_NAME", "LAT", "LON", value]])
+            st.dataframe(outliers[["STATION_NAME", "LAT", "LON", value]].round(5))
             
             # 顯示長條圖
             st.bar_chart(outliers.set_index("STATION_NAME")[value])
@@ -115,7 +116,9 @@ def create_heatmap(data, value_columns, title):
             st.write("--------------------")
         else:
             st.write(f"{value} 的離群測站數量不足 5 個，無法繪製直方圖。")
+            st.write(f"{value} 的上界值（90百分位數）: {upper_bound}")
             st.write("--------------------")
+
 # 重金屬熱點圖
 create_heatmap(data, heavy_metals, "重金屬熱點圖")
 
