@@ -39,6 +39,7 @@ st.markdown(
         background-image: url('https://i.imgur.com/D6zbNRN.png'); 
         background-size: cover;  /* 讓背景圖像填滿整個視窗 */
         background-position: center;  /* 背景圖像居中 */
+        color: white;  /* 設定字體顏色為白色 */
     }
     </style>
     """,
