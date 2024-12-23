@@ -1,4 +1,3 @@
-# 完整 Streamlit 應用程式
 import streamlit as st
 import leafmap.foliumap as leafmap
 
