@@ -50,6 +50,21 @@ st.markdown(
         background-position: center;  /* 背景圖像居中 */
         color: white;  /* 設定字體顏色為白色 */
     }
+     /* 調整背景圖片的透明度 */
+    .stApp::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://i.imgur.com/D6zbNRN.png');
+        background-size: cover;
+        background-position: center center;
+        background-attachment: fixed;
+        opacity: 0.5;  /* 調整透明度，0表示完全透明，1表示完全不透明 */
+        z-index: -1;  /* 讓背景圖片在內容下面 */
+    }
     </style>
     """,
     unsafe_allow_html=True
