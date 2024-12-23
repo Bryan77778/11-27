@@ -10,33 +10,34 @@ st.markdown(
     """
     <style>
     .stApp {
-        background-image: url('https://i.imgur.com/D6zbNRN.png'); 
-        background-size: cover;  /* 讓背景圖像填滿整個視窗 */
-        background-position: center;  /* 背景圖像居中 */
-        color: white;  /* 設定字體顏色為白色 */
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                          url('https://i.imgur.com/D6zbNRN.png'); /* 添加半透明黑色遮罩 */
+        background-size: cover; /* 背景圖片填滿窗口 */
+        background-position: center; /* 背景圖片居中 */
+        color: white; /* 全局字體顏色設置為白色 */
+    }
+    .custom-text {
+        font-size: 18px; /* 設置文字大小 */
+        line-height: 1.6; /* 行距 */
+        color: white; /* 設置文字顏色 */
     }
     </style>
     """,
     unsafe_allow_html=True
 )
 
+# 添加文字內容，並使用自定義的樣式類
 st.markdown(
     """
-    <style>
-    .stMarkdown {
-        font-size: 20px;  /* 設定字體大小 */
-        color: white;  /* 設定字體顏色為白色 */
-    }
-    </style>
-- 選擇不同的底圖查看釣魚點位，以及水質測站點位的相對位置
-- 圖台右上方可勾選以呈現不同的圖層
-- 屬性資料表展示釣魚點位，以及水質測站的基本資料
-- **注意**：請勿選擇OpenStreetMap當作底圖，否則點位會無法顯示
+    <div class="custom-text">
+    - 選擇不同的底圖查看釣魚點位，以及水質測站點位的相對位置<br>
+    - 圖台右上方可勾選以呈現不同的圖層<br>
+    - 屬性資料表展示釣魚點位，以及水質測站的基本資料<br>
+    - <b>注意</b>：請勿選擇 OpenStreetMap 當作底圖，否則點位會無法顯示
     </div>
     """,
     unsafe_allow_html=True
 )
-
 # 資料來源
 county_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E7%B8%A3%E5%B8%82%E8%A8%88%E6%95%B8%E7%B5%90%E6%9E%9C4326.shp"
 water_quality_stations_url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/%E6%B5%B7%E5%9F%9F%E6%B0%B4%E8%B3%AA%E6%B8%AC%E7%AB%99.geojson"
