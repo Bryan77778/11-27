@@ -96,7 +96,7 @@ def create_heatmap(data, value_columns, title):
 
     # 在地圖下方顯示屬性資料表
     st.write(f"{title}數值")
-    st.dataframe(data[["STATION_NAME", "LAT", "LON"] + value_columns])
+    st.dataframe(data[["STATION_NAME", "LAT", "LON"] + value_columns].round(5))
 
     # 分位數法檢測離群值並顯示結果
     st.write(f"Outlier Detection for {title}")
