@@ -36,7 +36,8 @@ st.markdown(
     """
     <style>
     .stApp {
-        background-image: url('https://github.com/Bryan77778/11-27/blob/6f5018f786ee095e06871e5ab2190e30fe9150a4/%E8%83%8C%E6%99%AF%E5%9C%96%E7%89%87.png'); 
+        background-image: url('https://raw.githubusercontent.com/Bryan77778/11-27/main/%E8%83%8C%E6%99%AF%E5%9C%96%E7%89%87.png
+'); 
         background-size: cover;  /* 讓背景圖像填滿整個視窗 */
         background-position: center;  /* 背景圖像居中 */
     }
