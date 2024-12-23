@@ -19,6 +19,13 @@ st.title("釣魚地點互動式圖台")
 
 st.markdown(
     """
+    <style>
+    .stMarkdown {
+        font-size: 24px;  /* 設定字體大小 */
+        color: white;  /* 設定字體顏色為白色 */
+    }
+    </style>
+    <div class="stMarkdown">
     資料來自於政府資料開放平台、氣象資料開放平台、Windy，詳細資料如下
     1. 全台開放釣點位置
     2. 海域水質測站
@@ -28,7 +35,9 @@ st.markdown(
     同時也能在透過Windy了解即時氣象資料 \n
     並透過查詢潮汐及海像 \n
     與觀看及時影像 \n
-    """
+    </div>
+    """,
+    unsafe_allow_html=True
 )
 st.header("在左側選擇分頁")
 
