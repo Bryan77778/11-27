@@ -36,7 +36,7 @@ st.markdown(
     """
     <style>
     .stApp {
-        background-image: url('https://img1.wallspic.com/previews/0/4/9/5/5/155940/155940-hei_se_he_bai_se_de-he_yin_ying_de_se_cai-xiang_shi_zhi_chu-x750.jpg'); 
+        background-image: url('https://github.com/Bryan77778/11-27/edit/main/%E8%83%8C%E6%99%AF%E5%9C%96%E7%89%87.png'); 
         background-size: cover;  /* 讓背景圖像填滿整個視窗 */
         background-position: center;  /* 背景圖像居中 */
     }
