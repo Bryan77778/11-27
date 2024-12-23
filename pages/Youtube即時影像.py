@@ -5,11 +5,41 @@ import leafmap.foliumap as leafmap
 # 設定 Streamlit 網頁標題與描述
 st.set_page_config(page_title="地圖上的 YouTube 連結", layout="wide")
 st.title("地圖上的 YouTube 連結")
-st.markdown("""
-此應用展示如何在地圖上添加帶有 YouTube 連結的點座標。
-- 點擊地圖上的點標記以查看詳細資訊。
-- 點擊彈出窗口中的連結以打開 YouTube。
-""")
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                          url('https://i.imgur.com/D6zbNRN.png'); /* 添加半透明黑色遮罩 */
+        background-size: cover; /* 背景圖片填滿窗口 */
+        background-position: center; /* 背景圖片居中 */
+        color: white; /* 全局字體顏色設置為白色 */
+    }
+    .custom-text {
+        font-size: 18px; /* 設置文字大小 */
+        line-height: 1.6; /* 行距 */
+        color: white; /* 設置文字顏色 */
+    }
+    .stSelectbox div[role="combobox"] {
+        color: white;  /* 下拉選單內的文字設置為黑色（避免與白色背景衝突） */
+        background-color: white;  /* 下拉選單背景設置為白色 */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    """
+    <div class="custom-text">
+    此應用展示如何在地圖上添加帶有 YouTube 連結的點座標。
+    - 點擊地圖上的點標記以查看詳細資訊。
+    - 點擊彈出窗口中的連結以打開 YouTube。
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 
 # 定義多個點的數據
 points = [
