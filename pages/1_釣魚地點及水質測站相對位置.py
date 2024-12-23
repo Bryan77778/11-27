@@ -22,7 +22,7 @@ st.markdown(
         color: white; /* 設置文字顏色 */
     }
     .stSelectbox div[role="combobox"] {
-        color: black;  /* 下拉選單內的文字設置為黑色（避免與白色背景衝突） */
+        color: white;  /* 下拉選單內的文字設置為黑色（避免與白色背景衝突） */
         background-color: white;  /* 下拉選單背景設置為白色 */
     }
     </style>
