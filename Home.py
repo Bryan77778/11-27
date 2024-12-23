@@ -21,7 +21,7 @@ st.markdown(
     """
     <style>
     .stMarkdown {
-        font-size: 24px;  /* 設定字體大小 */
+        font-size: 20px;  /* 設定字體大小 */
         color: white;  /* 設定字體顏色為白色 */
     }
     </style>
