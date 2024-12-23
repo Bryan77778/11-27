@@ -42,12 +42,13 @@ st.header("在左側選擇分頁")
 
 st.markdown(
     """
-    <style>
+     <style>
     .stApp {
-        background-image: url('https://i.imgur.com/D6zbNRN.png'); 
-        background-size: cover;  /* 讓背景圖像填滿整個視窗 */
-        background-position: center;  /* 背景圖像居中 */
-        color: white;  /* 設定字體顏色為白色 */
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                          url('https://i.imgur.com/D6zbNRN.png'); /* 添加半透明黑色遮罩 */
+        background-size: cover; /* 背景圖片填滿窗口 */
+        background-position: center; /* 背景圖片居中 */
+        color: white; /* 全局字體顏色設置為白色 */
     }
     </style>
     """,
