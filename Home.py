@@ -62,7 +62,7 @@ st.markdown(
         background-size: cover;
         background-position: center center;
         background-attachment: fixed;
-        opacity: 0.5;  /* 調整透明度，0表示完全透明，1表示完全不透明 */
+        opacity: 0.3;  /* 調整透明度，0表示完全透明，1表示完全不透明 */
         z-index: -1;  /* 讓背景圖片在內容下面 */
     }
     </style>
