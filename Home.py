@@ -31,4 +31,20 @@ st.markdown(
     """
 )
 
+
+# 加入背景圖片
+st.markdown(
+    """
+    <style>
+    body {
+        background-image: url('https://raw.githubusercontent.com/Bryan77778/11-27/main/%E8%83%8C%E6%99%AF%E5%9C%96%E7%89%87.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 st.header("在左側選擇分頁")
