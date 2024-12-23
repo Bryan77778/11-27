@@ -60,7 +60,7 @@ logo = "https://i.imgur.com/UbOXYAU.png"
 st.sidebar.image(logo)
 
 # 下載 GeoJSON 資料
-url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/streamlit%E6%B0%B4%E8%B3%AA%E6%83%85%E6%B3%81.geojson"
+url = "https://github.com/Bryan77778/11-27/raw/refs/heads/main/streamlit%E6%B0%B4%E8%B3%87%E6%83%85%E6%B3%81.geojson"
 data = gpd.read_file(url)
 
 # 定義化學物質類別
@@ -94,9 +94,9 @@ def create_heatmap(data, value_columns, title):
 
     m.to_streamlit(height=500)
 
-    # 在地圖下方顯示屬性資料表
+    # 在地圖下方顯示屬性資料表（四捨五入至小數點後五位）
     st.write(f"{title}數值")
-    st.dataframe(data[["STATION_NAME", "LAT", "LON"] + value_columns])
+    st.dataframe(data[["STATION_NAME", "LAT", "LON"] + value_columns].round(5))
 
     # 分位數法檢測離群值並顯示結果
     st.write(f"Outlier Detection for {title}")
@@ -107,15 +107,16 @@ def create_heatmap(data, value_columns, title):
         # 檢查離群測站數量是否 >= 5
         if len(outliers) >= 5:
             st.write(f"{value} 的離群測站: {len(outliers)} 個")
-            st.dataframe(outliers[["STATION_NAME", "LAT", "LON", value]])
+            st.dataframe(outliers[["STATION_NAME", "LAT", "LON", value]].round(5))
             
             # 顯示長條圖
             st.bar_chart(outliers.set_index("STATION_NAME")[value])
-            st.write(f"{value} 的上界值（90百分位數）: {upper_bound}")
+            st.write(f"{value} 的上界值（90百分位數）: {round(upper_bound, 5)}")
             st.write("--------------------")
         else:
             st.write(f"{value} 的離群測站數量不足 5 個，無法繪製直方圖。")
             st.write("--------------------")
+
 # 重金屬熱點圖
 create_heatmap(data, heavy_metals, "重金屬熱點圖")
 
