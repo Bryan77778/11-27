@@ -78,6 +78,3 @@ m.to_streamlit(height=600)
 st.markdown("### 點座標與 YouTube 連結")
 st.dataframe(points)
 
-# 顯示數據表格
-st.markdown("### 點座標與 YouTube 連結")
-st.dataframe(points)
