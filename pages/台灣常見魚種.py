@@ -15,4 +15,4 @@ tab = st.tabs(["魚種圖片展示"])[0]
 # 在分頁中上下排列顯示圖片
 with tab:
     for image_url in image_urls:
-        st.image(image_url, caption=image_url, use_column_width=True)
+        st.image(image_url, caption=image_url, use_container_width=True)
