@@ -13,7 +13,7 @@ st.markdown(
     <style>
     .stApp {
         background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                          url('https://i.imgur.com/D6zbNRN.png'); /* 添加半透明黑色遮罩 */
+                          url('https://github.com/Bryan77778/11-27/blob/main/%E8%83%8C%E6%99%AF%E5%9C%96%E7%89%87.png?raw=true'); /* 添加半透明黑色遮罩 */
         background-size: cover; /* 背景圖片填滿窗口 */
         background-position: center; /* 背景圖片居中 */
         color: white; /* 全局字體顏色設置為白色 */
