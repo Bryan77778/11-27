@@ -5,8 +5,8 @@ st.title("台灣常見魚種")
 
 # 圖片網址
 image_urls = [
-    "https://i.imgur.com/dwcaKvQ.jpeg",
-    "https://i.imgur.com/VlARaQ4.jpeg"
+    "https://github.com/Bryan77778/11-27/blob/main/%E5%8F%B0%E7%81%A3%E5%B8%B8%E8%A6%8B%E9%AD%9A%E7%A8%AE1.jpg?raw=true",
+    "https://github.com/Bryan77778/11-27/blob/main/%E5%8F%B0%E7%81%A3%E5%B8%B8%E8%A6%8B%E9%AD%9A%E7%A8%AE2.jpg?raw=true"
 ]
 
 # 創建單一分頁
